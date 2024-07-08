@@ -1,0 +1,26 @@
+{
+  "actions": {
+    "create": "Add Field"
+  },
+  "datatable": {
+    "label": {
+      "description": "Description",
+      "hectares": "Hectares"
+    }
+  },
+  "create": {
+    "label": {
+      "description": "Description",
+      "hectares": "Hectares"
+    },
+    "title": "Add Field",
+    "button": {
+      "submit": "Add Field"
+    }
+  },
+  "toast": {
+    "create": {
+      "success": "Field added successfully"
+    }
+  }
+}

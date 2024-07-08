@@ -1,0 +1,31 @@
+{
+  "datatable": {
+    "label": {
+      "description": "Descripcion",
+      "buyPrice": "Precio Compra",
+      "sellPrice": "Precio Venta",
+      "minimumQuantity": "Cantidad Minima",
+      "createdAt": "Creado"
+    }
+  },
+  "actions": {
+    "create": "Crear Producto"
+  },
+  "create": {
+    "title": "Crear Producto",
+    "label": {
+      "description": "Descripcion",
+      "buyPrice": "Precio Compra",
+      "sellPrice": "Precio Venta",
+      "minimumQuantity": "Cantidad Minima"
+    },
+    "button": {
+      "submit": "Crear Producto"
+    }
+  },
+  "toast": {
+    "create": {
+      "success": "Producto creado con exito"
+    }
+  }
+}
