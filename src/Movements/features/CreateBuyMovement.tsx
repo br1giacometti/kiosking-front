@@ -13,10 +13,11 @@ import FormSectionLayout from "Base/layout/FormSectionLayout";
 import FormInputNumber from "Base/components/FormInputNumber";
 import ConfirmCreateModal from "Movements/components/ConfirmCreateDialog";
 import FormSelectSingleWH from "./FormSelectSingleWH";
-import FormAddProductsDetails from "./FormAddProductsDetails";
+import FormCreateBuyDetails from "./FormCreateBuyDetails";
 
 // import useProductsOptions from "Movements/hooks/useProductsOptions";
 import FormSelectSingleProduct from "./FormSelectSingleProduct";
+import { CreateBuySchema } from "Movements/schemas/CreateBuySchema";
 
 // import { StatusCard } from "Base/components";
 
@@ -32,7 +33,7 @@ const CreateBuyMovement = ({ navigateToMovements }: CreateMovementsProps) => {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useFormContext<CreateMovementsSchema>();
+  } = useFormContext<CreateBuySchema>();
 
   const { loading, error, startFetch, successFetch, failureFetch } =
     useCreateMovementsStates();
@@ -41,13 +42,13 @@ const CreateBuyMovement = ({ navigateToMovements }: CreateMovementsProps) => {
 
   const { createMovements } = useCreateMovementsService();
 
-  const handleCreateMovements = (data: CreateMovementsSchema) => {
+  const handleCreateMovements = (data: CreateBuySchema) => {
     startFetch();
 
     createMovements({
-      warehouseOriginId: data.warehouseOriginId.value,
-      stockMovementsDetail: data.stockMovementsDetail.map((product) => ({
-        productId: product.productId,
+      warehouseDestinyId: data.warehouseDestinyId.value,
+      stockMovementsDetail: data.stockMovementDetail.map((product) => ({
+        productId: product.product.productId,
         quantity: product.quantity,
         buyPrice: product.buyPrice,
       })),
@@ -100,7 +101,8 @@ const CreateBuyMovement = ({ navigateToMovements }: CreateMovementsProps) => {
             leftIcon="$"
             name="value"
             thousandSeparator="."
-            type="number"
+            type="stringiok'
+             drnb"
           />
 
           <FormInputNumber
@@ -120,7 +122,7 @@ const CreateBuyMovement = ({ navigateToMovements }: CreateMovementsProps) => {
           />
         </FormSectionLayout>
 
-        <FormAddProductsDetails></FormAddProductsDetails>
+        <FormCreateBuyDetails></FormCreateBuyDetails>
 
         <Button colorScheme="main" isLoading={loading} onClick={onOpen}>
           {"Confirmar compra"}

@@ -17,6 +17,7 @@ import FormAddProductsDetails from "./FormAddProductsDetails";
 
 // import useProductsOptions from "Movements/hooks/useProductsOptions";
 import FormSelectSingleProduct from "./FormSelectSingleProduct";
+import FormCreateBuyDetails from "./FormCreateBuyDetails";
 
 // import { StatusCard } from "Base/components";
 
@@ -120,15 +121,15 @@ const CreateBuyMovement = ({ navigateToMovements }: CreateMovementsProps) => {
             type="text"
           />
         </FormSectionLayout>
-
+        <FormCreateBuyDetails />
         <FormAddProductsDetails></FormAddProductsDetails>
 
         <Button colorScheme="main" isLoading={loading} onClick={onOpen}>
           {"Confirmar compra"}
         </Button>
         <ConfirmCreateModal
-          description={"confirm button"}
-          isLoading={loading}
+          description={"Desea confirmar la operacion?"}
+          isLoading={loading} 
           isOpen={isOpen}
           title={"Confirmar"}
           onClose={onClose}

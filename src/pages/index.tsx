@@ -26,21 +26,9 @@ export default function Home() {
         <meta content="width=device-width, initial-scale=1" name="viewport" />
         <link href="/favicon.ico" rel="icon" />
       </Head>
-      <Box as="main" p={4}>
-        <DataTable
-          columns={columns}
-          data={[
-            { name: "Carlos", service: "Servicio 1" },
-            { name: "Carlos", service: "Servicio 2" },
-            { name: "Carlos", service: "Servicio 3" },
-            { name: "Carlos", service: "Servicio 4" },
-            { name: "Carlos", service: "Servicio 5" },
-            { name: "Carlos", service: "Servicio 6" },
-            { name: "Carlos", service: "Servicio 7" },
-            { name: "Carlos", service: "Servicio 8" },
-          ]}
-        />
-      </Box>
+      {/* <Box as="main" p={4}>
+        <DataTable columns={columns} data={[]} />
+      </Box> */}
     </>
   );
 }

@@ -45,6 +45,8 @@ const FormSelectSingleProduct = () => {
                 : null
             }
             onChange={field.onChange}
+            // Asegúrate de que el componente pueda recibir clicks correctamente
+            className="form-select"
           />
         )}
       />
