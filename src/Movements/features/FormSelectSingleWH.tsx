@@ -3,16 +3,14 @@ import { Controller, useFormContext } from "react-hook-form";
 import { useMemo } from "react";
 import { useTranslation } from "Base/i18n";
 import useWareHouseOptions from "Movements/hooks/useWareHouseOptions";
-import { CreateMovementsSchema } from "Movements/schemas/CreateMovementsSchema";
-import { FormSelect, StatusCard } from "Base/components";
+import { FormSelect } from "Base/components";
 
 const FormSelectSingleWH = () => {
-  const { t } = useTranslation(["movements"]);
   const { options, loading } = useWareHouseOptions();
   const {
     control,
     formState: { errors },
-  } = useFormContext<CreateMovementsSchema>();
+  } = useFormContext();
 
   const optionsFiltered = useMemo(
     () => options.filter((option) => option.value),

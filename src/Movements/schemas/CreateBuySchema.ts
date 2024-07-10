@@ -41,13 +41,30 @@ export type StockMovementsDetail = z.infer<typeof StockMovementsDetailSchema>;
 
 const createBuySchema = z.object({
   warehouseDestinyId: warehouseOptionItem,
-  // warehouseDestiny: optionItem,
   movementType: z.string(),
   date: z.date(),
   stockMovementDetail: z.array(StockMovementsDetailSchema),
-  value: z.number(),
+  value: z.string().transform((val, ctx) => {
+    const parsed = Number.parseInt(val.replaceAll(".", ""), 10);
+    if (Number.isNaN(parsed)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Required",
+      });
+
+      return z.NEVER;
+    }
+    if (parsed <= 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "mustBePositive",
+      });
+
+      return z.NEVER;
+    }
+    return parsed;
+  }),
   description: z.string(),
-  voucherDescription: z.string(),
 });
 
 export type CreateBuySchema = z.infer<typeof createBuySchema>;

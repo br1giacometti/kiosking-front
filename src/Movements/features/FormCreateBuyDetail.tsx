@@ -1,10 +1,13 @@
 import { Box, Center, IconButton, Stack } from "@chakra-ui/react";
 import { TrashIcon } from "@heroicons/react/24/outline";
-import { FormInputText } from "Base/components";
+import { FormInputText, FormSelect } from "Base/components";
 import FormInputNumber from "Base/components/FormInputNumber";
 import FormSectionLayout from "Base/layout/FormSectionLayout";
 import useCreateBuyContext from "Movements/contexts/CreateBuyContext/hooks/useCreateBuyContext";
-import FormSelectSingleProduct from "./FormSelectSingleProduct";
+import { Controller } from "react-hook-form";
+import useProductsOptions from "Movements/hooks/useProductsOptions";
+import { OnChangeValue, SingleValue } from "chakra-react-select";
+import OptionItem from "Base/types/OptionItem";
 
 interface FormCreateOwnerProps {
   id: string;
@@ -12,6 +15,8 @@ interface FormCreateOwnerProps {
 }
 
 const FormCreateBuyDetail = ({ index }: FormCreateOwnerProps) => {
+  const { options, loading } = useProductsOptions();
+
   const {
     register,
     control,
@@ -37,7 +42,51 @@ const FormCreateBuyDetail = ({ index }: FormCreateOwnerProps) => {
           minW={{ lg: "md" }}
           title={`${"Seleccionar retiro"}`}
         >
-          {/* {<FormSelectSingleProduct />} */}
+          <Controller
+            control={control}
+            name={`stockMovementDetail.${index}.product`}
+            render={({ field }) => (
+              <FormSelect
+                ref={field.ref}
+                isRequired
+                errorMessage={
+                  errors.stockMovementDetail?.message
+                    ? "Debe seleccionar un producto"
+                    : undefined
+                }
+                isLoading={loading}
+                label={"Seleccionar producto"}
+                name={field.name}
+                options={options}
+                value={
+                  field.value &&
+                  "productId" in field.value &&
+                  field.value.productId !== null
+                    ? {
+                        label: field.value.description,
+                        value: field.value.productId,
+                      }
+                    : null
+                }
+                onChange={(newValue) => {
+                  const optionSelected = newValue as OnChangeValue<
+                    OptionItem<number>,
+                    false
+                  >;
+                  field.onChange(
+                    optionSelected
+                      ? {
+                          description: optionSelected.label,
+                          productId: optionSelected.value,
+                        }
+                      : null
+                  );
+                }}
+                // Asegúrate de que el componente pueda recibir clicks correctamente
+                className="form-select"
+              />
+            )}
+          />
 
           <FormInputText
             isRequired

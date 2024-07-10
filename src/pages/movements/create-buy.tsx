@@ -8,9 +8,7 @@ import createBuySchema, {
   CreateBuySchema,
 } from "Movements/schemas/CreateBuySchema";
 import { CreateBuyMovement } from "Movements/features";
-import { useTranslation } from "Base/i18n";
 import PageLayout from "Base/layout/PageLayout";
-import AddProductsProvider from "Movements/contexts/CreateBuyContext/AddProductsProvider";
 import CreateBuyProvider from "Movements/contexts/CreateBuyContext/CreateBuyProvider";
 
 const MovementCreatePage = () => {
@@ -19,7 +17,7 @@ const MovementCreatePage = () => {
     resolver: zodResolver(createBuySchema),
     //remover hardcodeo
     defaultValues: {
-      movementType: "MOVEMENT",
+      movementType: "BUY",
       date: new Date(),
       stockMovementDetail: [],
       warehouseDestinyId: {},

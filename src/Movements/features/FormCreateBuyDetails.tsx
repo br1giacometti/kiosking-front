@@ -13,7 +13,7 @@ const FormCreateBuyDetails = () => {
 
   const addNewBuyDetail = useCallback(() => {
     append({
-      product: { description: "", productId: 0 },
+      product: null as any,
       quantity: 0,
       buyPrice: 0,
       value: 0,
