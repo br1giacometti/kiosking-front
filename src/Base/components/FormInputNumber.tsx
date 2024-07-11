@@ -18,7 +18,7 @@ interface FormInputNumberProps<T extends FieldValues> extends FormControlProps {
   id: string;
   isRequired?: boolean;
   label: string;
-  name: string;
+  name: Path<T>;
   placeholder?: string;
   thousandSeparator?: boolean | string;
   type?: HTMLInputTypeAttribute;

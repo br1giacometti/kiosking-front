@@ -77,7 +77,7 @@ LoginProps) {
         position="relative"
       >
         <Box bottom={0} left={0} position="absolute" right={0} top={0}>
-          {errorMessage.length > 0 ? (
+          {errorMessage !== undefined && errorMessage.length > 0 ? (
             <ErrorMessageTop message={errorMessage} onClose={onErrorClose} />
           ) : null}
         </Box>
@@ -108,7 +108,7 @@ LoginProps) {
                 <Heading fontSize={"2xl"}>{"Logearse"}</Heading>
                 <Stack spacing={{ base: 8, md: 6 }}>
                   <FormControl id="email" isInvalid={Boolean(errors.email)}>
-                    <FormLabel>{"email"}</FormLabel>
+                    <FormLabel>{"Usuario"}</FormLabel>
                     <Input type="email" {...register("email")} />
                     {errors.email ? (
                       <FormErrorMessage>
@@ -120,7 +120,7 @@ LoginProps) {
                     id="password"
                     isInvalid={Boolean(errors.password)}
                   >
-                    <FormLabel>{"password"}</FormLabel>
+                    <FormLabel>{"Contraseña"}</FormLabel>
                     <Input type="password" {...register("password")} />
                     {errors.password ? (
                       <FormErrorMessage>

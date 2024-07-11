@@ -1,13 +1,11 @@
 import { Controller, useFormContext } from "react-hook-form";
 
-import { useEffect, useMemo } from "react";
-import { useTranslation } from "Base/i18n";
+import { useMemo } from "react";
 import { CreateMovementsSchema } from "Movements/schemas/CreateMovementsSchema";
-import { FormSelect, StatusCard } from "Base/components";
+import { FormSelect } from "Base/components";
 import useProductsOptions from "Movements/hooks/useProductsOptions";
 
 const FormSelectSingleProduct = () => {
-  const { t } = useTranslation(["movements"]);
   const { options, loading } = useProductsOptions();
   const {
     control,
@@ -45,6 +43,8 @@ const FormSelectSingleProduct = () => {
                 : null
             }
             onChange={field.onChange}
+            // Asegúrate de que el componente pueda recibir clicks correctamente
+            className="form-select"
           />
         )}
       />

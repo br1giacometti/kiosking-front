@@ -4,9 +4,9 @@ import { UseFieldArrayReturn, UseFormReturn } from "react-hook-form";
 import { CreateMovementsSchema } from "Movements/schemas/CreateMovementsSchema";
 
 export type AddProductsContext = UseFormReturn<CreateMovementsSchema> & {
-  stockMovementsDetail: UseFieldArrayReturn<
+  stockMovementDetail: UseFieldArrayReturn<
     CreateMovementsSchema,
-    "stockMovementsDetail"
+    "stockMovementDetail"
   >;
 };
 

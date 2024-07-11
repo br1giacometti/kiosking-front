@@ -1,10 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { useFormContext } from "react-hook-form";
+import { Controller, FieldErrors, useFormContext } from "react-hook-form";
 
-import { Button, Heading, useDisclosure, useToast } from "@chakra-ui/react";
+import { Button, useDisclosure, useToast } from "@chakra-ui/react";
 
 import { useTranslation } from "Base/i18n";
-import { CreateMovementsSchema } from "Movements/schemas/CreateMovementsSchema";
 import useCreateMovementsStates from "Movements/hooks/useCreateMovementsStates";
 import { useCreateMovementsService } from "Movements/data/MovementsRepository";
 import FormPageLayout from "Base/layout/FormPageLayout";
@@ -12,11 +11,12 @@ import FormContainerLayout from "Base/layout/FormContainerLayout";
 import FormSectionLayout from "Base/layout/FormSectionLayout";
 import FormInputNumber from "Base/components/FormInputNumber";
 import ConfirmCreateModal from "Movements/components/ConfirmCreateDialog";
-import FormSelectSingleWH from "./FormSelectSingleWH";
-import FormAddProductsDetails from "./FormAddProductsDetails";
+import FormCreateBuyDetails from "./FormCreateBuyDetails";
 
 // import useProductsOptions from "Movements/hooks/useProductsOptions";
-import FormSelectSingleProduct from "./FormSelectSingleProduct";
+import { CreateBuySchema } from "Movements/schemas/CreateBuySchema";
+import { FormInputText, FormSelect } from "Base/components";
+import useWareHouseOptions from "Movements/hooks/useWareHouseOptions";
 
 // import { StatusCard } from "Base/components";
 
@@ -28,11 +28,13 @@ const CreateBuyMovement = ({ navigateToMovements }: CreateMovementsProps) => {
   const { t } = useTranslation("movements");
   const {
     control,
-    watch,
     handleSubmit,
     formState: { errors },
+    register,
     reset,
-  } = useFormContext<CreateMovementsSchema>();
+  } = useFormContext<CreateBuySchema>();
+  const { options: warehouseOptions, loading: warehouseLoading } =
+    useWareHouseOptions();
 
   const { loading, error, startFetch, successFetch, failureFetch } =
     useCreateMovementsStates();
@@ -41,21 +43,21 @@ const CreateBuyMovement = ({ navigateToMovements }: CreateMovementsProps) => {
 
   const { createMovements } = useCreateMovementsService();
 
-  const handleCreateMovements = (data: CreateMovementsSchema) => {
+  const handleCreateMovements = (data: CreateBuySchema) => {
+    console.log("startFetch :>> ", data);
     startFetch();
 
     createMovements({
-      warehouseOriginId: data.warehouseOriginId.value,
-      stockMovementsDetail: data.stockMovementsDetail.map((product) => ({
-        productId: product.productId,
+      warehouseDestinyId: data.warehouseDestinyId.value,
+      stockMovementDetail: data.stockMovementDetail.map((product) => ({
+        productId: product.product.productId,
         quantity: product.quantity,
         buyPrice: product.buyPrice,
       })),
       date: new Date(),
-      voucherDescription: "vaucher Description  hardcode",
-      description: "Test 1  hardcode",
+      description: data.description,
       movementType: data.movementType,
-      value: 1500, // hardcode
+      value: data.value, // hardcode
     })
       .then((movementsCreated) => {
         reset();
@@ -73,6 +75,10 @@ const CreateBuyMovement = ({ navigateToMovements }: CreateMovementsProps) => {
       });
   };
 
+  const handleSubmitError = (errors: FieldErrors<CreateBuySchema>) => {
+    console.log("errors :>> ", errors);
+  };
+
   useEffect(() => {
     if (error) {
       toast({ status: "error", description: error });
@@ -83,11 +89,37 @@ const CreateBuyMovement = ({ navigateToMovements }: CreateMovementsProps) => {
     <FormPageLayout onSubmit={handleSubmit(handleCreateMovements)}>
       <FormContainerLayout>
         <FormSectionLayout>
-          <FormSelectSingleWH />
+          <Controller
+            control={control}
+            name="warehouseDestinyId"
+            render={({ field }) => (
+              <FormSelect
+                ref={field.ref}
+                isRequired
+                errorMessage={
+                  errors.warehouseDestinyId?.message
+                    ? "Debe seleccionar un deposito de origen"
+                    : undefined
+                }
+                isLoading={warehouseLoading}
+                label={"Deposito"}
+                name={field.name}
+                options={warehouseOptions}
+                value={
+                  field.value &&
+                  "value" in field.value &&
+                  field.value.value !== null
+                    ? field.value
+                    : null
+                }
+                onChange={field.onChange}
+              />
+            )}
+          />
 
           <FormInputNumber
             isRequired
-            control={control as any}
+            control={control}
             errorMessage={
               errors.value
                 ? (t(`errors.${errors.value.message}`, {
@@ -100,12 +132,11 @@ const CreateBuyMovement = ({ navigateToMovements }: CreateMovementsProps) => {
             leftIcon="$"
             name="value"
             thousandSeparator="."
-            type="number"
+            // type=""
           />
 
-          <FormInputNumber
+          <FormInputText
             isRequired
-            control={control as any}
             errorMessage={
               errors.description
                 ? (t(`errors.${errors.description.message}`, {
@@ -116,11 +147,11 @@ const CreateBuyMovement = ({ navigateToMovements }: CreateMovementsProps) => {
             id="description"
             label={"Descripcion de la compra"}
             name="description"
-            type="text"
+            inputProps={{ ...register("description") }}
           />
         </FormSectionLayout>
 
-        <FormAddProductsDetails></FormAddProductsDetails>
+        <FormCreateBuyDetails />
 
         <Button colorScheme="main" isLoading={loading} onClick={onOpen}>
           {"Confirmar compra"}
@@ -131,7 +162,7 @@ const CreateBuyMovement = ({ navigateToMovements }: CreateMovementsProps) => {
           isOpen={isOpen}
           title={"Confirmar"}
           onClose={onClose}
-          onConfirm={handleSubmit(handleCreateMovements)}
+          onConfirm={handleSubmit(handleCreateMovements, handleSubmitError)}
         />
       </FormContainerLayout>
     </FormPageLayout>

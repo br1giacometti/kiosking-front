@@ -1,31 +1,32 @@
 import { useCallback, useMemo } from "react";
 import { Button, Center, Text } from "@chakra-ui/react";
-import { useTranslation } from "Base/i18n";
-import useAddProductsContext from "Movements/contexts/CreateBuyContext/hooks/useAddProductsContext";
 
 import Carousel from "Base/components/Carousel";
-import FormAddProducts from "./FormAddProducts";
 
-const FormAddProductsDetails = () => {
-  const { t } = useTranslation("field");
+import useCreateBuyContext from "Movements/contexts/CreateBuyContext/hooks/useCreateBuyContext";
+import FormCreateBuyDetail from "./FormCreateBuyDetail";
+
+const FormCreateBuyDetails = () => {
   const {
     stockMovementDetail: { fields, append },
-  } = useAddProductsContext();
+  } = useCreateBuyContext();
 
-  const addNewProductDetail = useCallback(() => {
+  const addNewBuyDetail = useCallback(() => {
     append({
-      productId: 0,
-      buyPrice: 0,
+      product: null as any,
       quantity: 0,
+      buyPrice: 0,
+      value: 0,
+      description: "",
     });
   }, [append]);
 
-  const productsDetailsCreateList = useMemo(
+  const buyDetailsCreateList = useMemo(
     () =>
       fields
         .map((item, index) => ({
           id: item.id,
-          content: <FormAddProducts id={item.id} index={index} />,
+          content: <FormCreateBuyDetail id={item.id} index={index} />,
         }))
         .concat([
           {
@@ -36,23 +37,23 @@ const FormAddProductsDetails = () => {
                   colorScheme="main"
                   h={{ base: "2xl", md: "lg" }}
                   w="full"
-                  onClick={addNewProductDetail}
+                  onClick={addNewBuyDetail}
                 >
                   <Text fontSize={{ base: "3xl", lg: "5xl" }}>+</Text>
                   <Text fontSize={{ base: "2xl", lg: "4xl" }} ml={4}>
-                    {"Añadir producto"}
+                    {"Detalle"}
                   </Text>
                 </Button>
               </Center>
             ),
           },
         ]),
-    [addNewProductDetail, fields, t]
+    [addNewBuyDetail, fields]
   );
 
   return (
     <Carousel
-      items={productsDetailsCreateList}
+      items={buyDetailsCreateList}
       maxH={{ base: "2xl", lg: "initial" }}
       maxW={{ base: "container.sm", lg: "container.sm" }}
       overflowY={{ base: "scroll", lg: "initial" }}
@@ -64,4 +65,4 @@ const FormAddProductsDetails = () => {
   return null;
 };
 
-export default FormAddProductsDetails;
+export default FormCreateBuyDetails;

@@ -22,27 +22,23 @@ const MovementsList = ({ navigateToDetails }: MovementsListProps) => {
   const columns: BaseColumn<MovementListItem>[] = useMemo(
     () => [
       {
-        label: t("list.label.description"),
+        label: "Descripcion",
         selector: (row) => row.description,
       },
       {
-        label: t("list.label.movementType"),
+        label: "Tipo de movimiento",
         selector: (row) => {
-          const color = getMovementTypeColor(row.MovementType);
+          const color = getMovementTypeColor(row.movementType);
 
-          return (
-            <Badge colorScheme={color}>
-              {t(`list.movementTypes.${row.MovementType}`)}
-            </Badge>
-          );
+          return <Badge colorScheme={color}>{row.movementType}</Badge>;
         },
       },
       {
-        label: t("list.label.originBox"),
-        selector: (row) => row.MovementType,
+        label: "Valor",
+        selector: (row) => row.value,
       },
       {
-        label: t("list.label.date"),
+        label: "Fecha",
         selector: (row) => formatDate(new Date(row.date)),
       },
     ],

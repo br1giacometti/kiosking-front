@@ -33,6 +33,7 @@ const CreateField = ({ navigateToField }: CreateFieldProps) => {
   const { createField } = useCreateFieldService();
 
   const handleCreateField = (data: CreateFieldSchema) => {
+    console.log("asd");
     startFetch();
 
     createField({

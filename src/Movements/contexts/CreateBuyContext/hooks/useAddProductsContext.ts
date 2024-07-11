@@ -9,7 +9,7 @@ const useAddProductsContext = () => {
 
   if (context === undefined) {
     throw new Error(
-      "useCreateParcel must be used within a CreateParcelProvider"
+      "useAddProductsContext must be used within a CreateParcelProvider"
     );
   }
 

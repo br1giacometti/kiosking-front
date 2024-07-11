@@ -2,14 +2,14 @@ export default function getMovementTypeColor(
   movementType?: "WITHDRAW" | "PAY" | "RENDITION" | "EXPENSE" | string
 ) {
   switch (movementType) {
-    case "WITHDRAW": {
-      return "red";
+    case "BUY": {
+      return "green";
     }
-    case "PAY": {
+    case "APLICATION": {
       return "yellow";
     }
     case "RENDITION": {
-      return "green";
+      return "red";
     }
     case "EXPENSE": {
       return "orange";

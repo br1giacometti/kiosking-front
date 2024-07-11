@@ -6,8 +6,14 @@ export const optionItem = z.object({
   currentValue: z.number(),
 });
 
-export const CashBoxMovementsDetailSchema = z.object({
-  description: z.string().min(1, { message: "Required" }),
+export const warehouseMovementsDetail = z.object({
+  productId: z.number(),
+  quantity: z.number(),
+  buyPrice: z.number(),
+});
+
+const CreateWithdrawSchema = z.object({
+  description: z.string(),
   value: z.string().transform((val, ctx) => {
     const parsed = Number.parseInt(val.replaceAll(".", ""), 10);
     if (Number.isNaN(parsed)) {
@@ -28,19 +34,15 @@ export const CashBoxMovementsDetailSchema = z.object({
     }
     return parsed;
   }),
-});
-export type CashBoxMovementsDetail = z.infer<
-  typeof CashBoxMovementsDetailSchema
->;
-
-const createWithdrawSchema = z.object({
-  isVirtualPaid: z.boolean(),
-  cashBoxOrigin: optionItem,
+  warehouseOriginId: z.number(),
+  voucherDescription: z.string(),
   movementType: z.string(),
+  batchId: z.number(),
   date: z.string(),
-  cashBoxMovementsDetail: z.array(CashBoxMovementsDetailSchema),
+  aplicatorId: z.number(),
+  warehouseMovementsDetail: z.array(warehouseMovementsDetail),
 });
 
-export type CreateWithdrawSchema = z.infer<typeof createWithdrawSchema>;
+export type CreateWithdrawSchema = z.infer<typeof CreateWithdrawSchema>;
 
-export default createWithdrawSchema;
+export default CreateWithdrawSchema;

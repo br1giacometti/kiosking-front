@@ -1,10 +1,12 @@
+import { Aplicator } from "Aplicator/data/AplicatorRepository";
 import { User } from "Auth/types";
+import { Batch } from "Field/data/FieldRepository";
 import { Warehouse } from "Warehouse/data/WarehouseRepository";
 
-export interface ProductMovementsDetail {
+export interface StockMovementDetail {
   productId: number;
   quantity: number;
-  buyPrice: number;
+  buyPrice?: number;
 }
 
 export interface CreateMovementDto {
@@ -12,20 +14,25 @@ export interface CreateMovementDto {
   value?: number;
   description: string;
   movementType: "BUY" | "APLICATION" | "MOVEMENT" | string;
-  stockMovementsDetail?: ProductMovementsDetail[];
-  voucherDescription: string;
+  stockMovementDetail?: StockMovementDetail[];
+  voucherDescription?: string;
   date?: Date;
   warehouseOriginId?: number;
+  warehouseDestinyId?: number;
+  aplicatorId?: number;
 }
 
 export interface Movements {
   description: string;
   value: number;
-  user: User;
+  // user: User;
   MovementType: string;
   date: Date;
-  stockMovementsDetail?: ProductMovementsDetail[];
+  stockMovementDetail?: StockMovementDetail[];
   warehouseOrigin?: Warehouse;
+  warehouseDestiny?: Warehouse;
+  aplicator?: Aplicator;
+  batch?: Batch;
   id: number;
 }
 
@@ -33,8 +40,9 @@ export interface MovementListItem {
   description: string;
   value: number;
   user: User;
-  MovementType: string;
+  movementType: string;
   date: Date;
+  warehouseDestiny: string;
   id: number;
 }
 

@@ -5,10 +5,10 @@ import AddProductsContext, {
 
 const AddProductsProvider = ({
   children,
-  stockMovementsDetail,
+  stockMovementDetail,
   ...props
 }: PropsWithChildren<TAddProductsContext>) => (
-  <AddProductsContext.Provider value={{ ...props, stockMovementsDetail }}>
+  <AddProductsContext.Provider value={{ ...props, stockMovementDetail }}>
     {children}
   </AddProductsContext.Provider>
 );

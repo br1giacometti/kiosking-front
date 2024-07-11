@@ -8,7 +8,6 @@ import {
   AlertDialogFooter,
   Button,
 } from "@chakra-ui/react";
-import { useTranslation } from "Base/i18n";
 
 interface ConfirmCreateModalProps {
   title: string;
@@ -27,7 +26,6 @@ const ConfirmCreateModal = ({
   onConfirm,
   title,
 }: ConfirmCreateModalProps) => {
-  const { t } = useTranslation("movements");
   const cancelRef = useRef(null);
 
   return (
@@ -46,7 +44,7 @@ const ConfirmCreateModal = ({
 
           <AlertDialogFooter>
             <Button ref={cancelRef} onClick={onClose}>
-              {t("createMovement.modal.button.buttonCancel")}
+              {"Cancelar"}
             </Button>
             <Button
               colorScheme="main"
@@ -54,7 +52,7 @@ const ConfirmCreateModal = ({
               ml={3}
               onClick={onConfirm}
             >
-              {t("createMovement.modal.button.buttonConfirm")}
+              {"Confirmar"}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
