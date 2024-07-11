@@ -1,4 +1,4 @@
-import fieldClient from "./client";
+import fieldClient from "./clientBatch";
 import createField from "./services/createField";
 import getAllField from "./services/getAllField";
 import { FieldRepository } from "./types";

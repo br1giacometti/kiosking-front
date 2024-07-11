@@ -3,14 +3,16 @@ import CreateAplicationContext, {
   CreateAplicationContext as TCreateAplicationContext,
 } from "./CreateAplicationContext";
 
-const CreateBuyProvider = ({
+const CreateAplicationProvider = ({
   children,
-  warehouseMovementsDetail,
+  stockMovementDetail,
   ...props
 }: PropsWithChildren<TCreateAplicationContext>) => (
-  <CreateAplicationContext.Provider value={{ ...props, warehouseMovementsDetail }}>
+  <CreateAplicationContext.Provider
+    value={{ ...props, stockMovementDetail: stockMovementDetail }}
+  >
     {children}
   </CreateAplicationContext.Provider>
 );
 
-export default CreateBuyProvider;
+export default CreateAplicationProvider;

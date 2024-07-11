@@ -13,8 +13,8 @@ const MovementsPage = () => {
     [router]
   );
 
-  const navigateToCreateRendition = useCallback(
-    () => router.push("/movements/create-rendition"),
+  const navigateToCreateAplication = useCallback(
+    () => router.push("/movements/create-aplication"),
     [router]
   );
 
@@ -34,7 +34,7 @@ const MovementsPage = () => {
         header: (
           <MovementsHeader
             navigateToCreateBuyMovement={navigateToCreateBuyMovement}
-            navigateToCreateRendition={navigateToCreateRendition}
+            navigateToCreateAplication={navigateToCreateAplication}
             navigateToCreateWithdraw={navigateToCreateWithdraw}
           />
         ),
