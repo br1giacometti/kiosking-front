@@ -14,7 +14,7 @@ interface CarouselProps extends BoxProps {
 }
 
 const Carousel = ({ items = [], ...boxProps }: CarouselProps) => (
-  <Box
+ <Box
     navigation
     as={Swiper}
     modules={[Navigation, Pagination]}
