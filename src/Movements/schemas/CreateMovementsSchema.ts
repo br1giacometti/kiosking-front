@@ -36,7 +36,7 @@ const createMovementsSchema = z.object({
   }),
   warehouseOriginId: optionItem,
   movementType: z.string(),
-  stockMovementsDetail: z.array(productMovementsDetail),
+  stockMovementDetail: z.array(productMovementsDetail),
   productId: optionItem,
 });
 

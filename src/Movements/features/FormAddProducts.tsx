@@ -24,7 +24,7 @@ const FormAddProducts = ({ index }: FormCreateOwnerProps) => {
   const {
     control,
     formState: { errors },
-    stockMovementsDetail: { remove },
+    stockMovementDetail: { remove },
   } = useAddProductsContext();
 
   return (
@@ -48,10 +48,10 @@ const FormAddProducts = ({ index }: FormCreateOwnerProps) => {
             isRequired
             control={control}
             errorMessage={
-              errors.stockMovementsDetail &&
-              errors.stockMovementsDetail[index]?.buyPrice
+              errors.stockMovementDetail &&
+              errors.stockMovementDetail[index]?.buyPrice
                 ? (t(
-                    `errors.${errors.stockMovementsDetail[index]?.buyPrice?.message}`,
+                    `errors.${errors.stockMovementDetail[index]?.buyPrice?.message}`,
                     {
                       ns: "common",
                     }
@@ -60,17 +60,17 @@ const FormAddProducts = ({ index }: FormCreateOwnerProps) => {
             }
             id={`buyPrice-${index}`} // Añade el índice al id para que sea único
             label={"Precio de compra"}
-            name={`stockMovementsDetail.${index}.buyPrice`} // Usa el índice en el name
+            name={`stockMovementDetail.${index}.buyPrice`} // Usa el índice en el name
           />
 
           <FormInputNumber
             isRequired
             control={control}
             errorMessage={
-              errors.stockMovementsDetail &&
-              errors.stockMovementsDetail[index]?.quantity
+              errors.stockMovementDetail &&
+              errors.stockMovementDetail[index]?.quantity
                 ? (t(
-                    `errors.${errors.stockMovementsDetail[index]?.quantity?.message}`,
+                    `errors.${errors.stockMovementDetail[index]?.quantity?.message}`,
                     {
                       ns: "common",
                     }
@@ -79,7 +79,7 @@ const FormAddProducts = ({ index }: FormCreateOwnerProps) => {
             }
             id={`quantity-${index}`} // Añade el índice al id para que sea único
             label={"Cantidad"}
-            name={`stockMovementsDetail.${index}.quantity`} // Usa el índice en el name
+            name={`stockMovementDetail.${index}.quantity`} // Usa el índice en el name
           />
         </FormSectionLayout>
       </Stack>

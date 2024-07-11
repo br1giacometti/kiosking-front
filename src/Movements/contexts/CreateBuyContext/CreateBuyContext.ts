@@ -3,7 +3,7 @@ import { createContext } from "react";
 import { UseFieldArrayReturn, UseFormReturn } from "react-hook-form";
 
 export type CreateBuyContext = UseFormReturn<CreateBuySchema> & {
-  stockMovementsDetail: UseFieldArrayReturn<
+  stockMovementDetail: UseFieldArrayReturn<
     CreateBuySchema,
     "stockMovementDetail"
   >;

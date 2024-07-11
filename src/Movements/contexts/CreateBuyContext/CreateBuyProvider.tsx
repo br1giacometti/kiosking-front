@@ -5,10 +5,10 @@ import CreateBuyContext, {
 
 const CreateBuyProvider = ({
   children,
-  stockMovementsDetail: stockMovementsDetail,
+  stockMovementDetail: stockMovementDetail,
   ...props
 }: PropsWithChildren<TCreateBuyContext>) => (
-  <CreateBuyContext.Provider value={{ ...props, stockMovementsDetail: stockMovementsDetail }}>
+  <CreateBuyContext.Provider value={{ ...props, stockMovementDetail: stockMovementDetail }}>
     {children}
   </CreateBuyContext.Provider>
 );

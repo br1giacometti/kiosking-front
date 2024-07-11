@@ -21,7 +21,7 @@ const FormCreateBuyDetail = ({ index }: FormCreateOwnerProps) => {
     register,
     control,
     formState: { errors },
-    stockMovementsDetail: { remove },
+    stockMovementDetail: { remove },
   } = useCreateBuyContext();
 
   return (

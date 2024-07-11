@@ -47,7 +47,7 @@ const CreateBuyMovement = ({ navigateToMovements }: CreateMovementsProps) => {
 
     createMovements({
       warehouseOriginId: data.warehouseOriginId.value,
-      stockMovementsDetail: data.stockMovementsDetail.map((product) => ({
+      stockMovementDetail: data.stockMovementDetail.map((product) => ({
         productId: product.productId,
         quantity: product.quantity,
         buyPrice: product.buyPrice,

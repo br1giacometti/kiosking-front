@@ -9,7 +9,7 @@ import FormAddProducts from "./FormAddProducts";
 const FormAddProductsDetails = () => {
   const { t } = useTranslation("field");
   const {
-    stockMovementsDetail: { fields, append },
+    stockMovementDetail: { fields, append },
   } = useAddProductsContext();
 
   const addNewProductDetail = useCallback(() => {

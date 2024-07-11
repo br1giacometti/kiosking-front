@@ -8,7 +8,7 @@ import FormCreateBuyDetail from "./FormCreateBuyDetail";
 
 const FormCreateBuyDetails = () => {
   const {
-    stockMovementsDetail: { fields, append },
+    stockMovementDetail: { fields, append },
   } = useCreateBuyContext();
 
   const addNewBuyDetail = useCallback(() => {

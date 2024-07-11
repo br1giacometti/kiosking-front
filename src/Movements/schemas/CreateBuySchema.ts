@@ -11,7 +11,7 @@ export const productOptionItem = z.object({
   description: z.string(),
 });
 
-export const StockMovementsDetailSchema = z.object({
+export const StockMovementDetailSchema = z.object({
   product: productOptionItem,
   quantity: z.number(),
   buyPrice: z.number().optional(),
@@ -37,13 +37,13 @@ export const StockMovementsDetailSchema = z.object({
     return parsed;
   }),
 });
-export type StockMovementsDetail = z.infer<typeof StockMovementsDetailSchema>;
+export type StockMovementDetail = z.infer<typeof StockMovementDetailSchema>;
 
 const createBuySchema = z.object({
   warehouseDestinyId: warehouseOptionItem,
   movementType: z.string(),
   date: z.date(),
-  stockMovementDetail: z.array(StockMovementsDetailSchema),
+  stockMovementDetail: z.array(StockMovementDetailSchema),
   value: z.string().transform((val, ctx) => {
     const parsed = Number.parseInt(val.replaceAll(".", ""), 10);
     if (Number.isNaN(parsed)) {

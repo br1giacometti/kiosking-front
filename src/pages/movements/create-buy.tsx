@@ -38,7 +38,7 @@ const MovementCreatePage = () => {
     <FormProvider {...methods}>
       <CreateBuyProvider
         {...methods}
-        stockMovementsDetail={stockMovementsArrayMethods}
+        stockMovementDetail={stockMovementsArrayMethods}
       >
         <PageLayout>
           {{
