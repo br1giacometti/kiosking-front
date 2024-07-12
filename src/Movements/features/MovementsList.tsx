@@ -18,7 +18,6 @@ const MovementsList = ({ navigateToDetails }: MovementsListProps) => {
   const toast = useToast();
   const { t } = useTranslation("movements");
   const { error, loading, movementsList } = useAllMovements();
-
   const columns: BaseColumn<MovementListItem>[] = useMemo(
     () => [
       {
@@ -39,7 +38,7 @@ const MovementsList = ({ navigateToDetails }: MovementsListProps) => {
       },
       {
         label: "Fecha",
-        selector: (row) => formatDate(new Date(row.date)),
+        selector: (row) => formatDate(new Date(row.createdAt)),
       },
     ],
     [t]

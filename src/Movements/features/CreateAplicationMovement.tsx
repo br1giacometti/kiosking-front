@@ -1,31 +1,26 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, FieldErrors, useFormContext } from "react-hook-form";
-
 import { Button, useDisclosure, useToast } from "@chakra-ui/react";
-
 import { useTranslation } from "Base/i18n";
 import useCreateMovementsStates from "Movements/hooks/useCreateMovementsStates";
 import { useCreateMovementsService } from "Movements/data/MovementsRepository";
 import FormPageLayout from "Base/layout/FormPageLayout";
 import FormContainerLayout from "Base/layout/FormContainerLayout";
 import FormSectionLayout from "Base/layout/FormSectionLayout";
-import FormInputNumber from "Base/components/FormInputNumber";
 import ConfirmCreateModal from "Movements/components/ConfirmCreateDialog";
 import FormCreateAplicationDetails from "./FormCreateAplicationDetails";
-
-// import useProductsOptions from "Movements/hooks/useProductsOptions";
 import { CreateAplicationSchema } from "Movements/schemas/CreateAplicationSchema";
 import { FormInputText, FormSelect } from "Base/components";
 import useWareHouseOptions from "Movements/hooks/useWareHouseOptions";
 import useAplicatorOptions from "Movements/hooks/useAplicatorOptions";
 import useFieldOptions from "Movements/hooks/useFieldOptions";
 import useBatchOptions from "Movements/hooks/useBatchOptions";
-
-// import { StatusCard } from "Base/components";
+import FormInputNumber from "Base/components/FormInputNumber";
 
 interface CreateMovementsProps {
   navigateToMovements: () => void;
 }
+
 const CreateAplicationMovement = ({
   navigateToMovements,
 }: CreateMovementsProps) => {
@@ -37,30 +32,42 @@ const CreateAplicationMovement = ({
     formState: { errors },
     register,
     reset,
+    watch,
   } = useFormContext<CreateAplicationSchema>();
+
   const { options: warehouseOptions, loading: warehouseLoading } =
     useWareHouseOptions();
-
   const { options: aplicatorOptions, loading: aplicatorLoading } =
     useAplicatorOptions();
-
   const { options: fieldOptions, loading: fieldLoading } = useFieldOptions();
-
   const { options: batchOptions, loading: batchLoading } = useBatchOptions();
 
   const { loading, error, startFetch, successFetch, failureFetch } =
     useCreateMovementsStates();
-
   const { isOpen, onClose, onOpen } = useDisclosure({ defaultIsOpen: false });
-
   const { createMovements } = useCreateMovementsService();
+
+  const [filteredBatchOptions, setFilteredBatchOptions] =
+    useState(batchOptions);
+
+  const fieldId = watch("fieldId");
+
+  useEffect(() => {
+    if (fieldId) {
+      const newBatchOptions = batchOptions.filter(
+        (batch) => batch.fieldId === fieldId.value
+      );
+      setFilteredBatchOptions(newBatchOptions);
+    } else {
+      setFilteredBatchOptions(batchOptions);
+    }
+  }, [fieldId, batchOptions]);
 
   const handleCreateMovements = (data: CreateAplicationSchema) => {
     console.log("startFetch :>> ", data);
     startFetch();
 
     createMovements({
-      warehouseDestinyId: data.warehouseOriginId.value,
       stockMovementDetail: data.stockMovementDetail.map((product) => ({
         productId: product.product.productId,
         quantity: product.quantity,
@@ -69,13 +76,17 @@ const CreateAplicationMovement = ({
       date: new Date(),
       description: data.description,
       movementType: data.movementType,
+      aplicatorId: data.aplicatorId.value,
+      warehouseOriginId: data.warehouseOriginId.value,
+      batchId: data.batchId.value,
+      value: data.value,
     })
       .then((movementsCreated) => {
         reset();
         successFetch(movementsCreated);
         toast({
           status: "success",
-          description: ` ${t("createMovement.message.success.create")} `,
+          description: ` ${"Creado correctamente"} `,
         });
         onClose();
         navigateToMovements();
@@ -137,7 +148,7 @@ const CreateAplicationMovement = ({
                 isRequired
                 errorMessage={
                   errors.aplicatorId?.message
-                    ? "Debe seleccionar un plicador"
+                    ? "Debe seleccionar un aplicador"
                     : undefined
                 }
                 isLoading={aplicatorLoading}
@@ -199,7 +210,7 @@ const CreateAplicationMovement = ({
                 isLoading={batchLoading}
                 label={"Lote"}
                 name={field.name}
-                options={batchOptions}
+                options={filteredBatchOptions}
                 value={
                   field.value &&
                   "value" in field.value &&
@@ -227,11 +238,27 @@ const CreateAplicationMovement = ({
             inputProps={{ ...register("description") }}
           />
         </FormSectionLayout>
-
+        <FormInputNumber
+          isRequired
+          control={control}
+          errorMessage={
+            errors.value
+              ? (t(`errors.${errors.value.message}`, {
+                  ns: "common",
+                }) as string)
+              : undefined
+          }
+          id="value"
+          label={"Valor aproximado de la aplicacion"}
+          leftIcon="$"
+          name="value"
+          thousandSeparator="."
+          // type=""
+        />
         <FormCreateAplicationDetails />
 
         <Button colorScheme="main" isLoading={loading} onClick={onOpen}>
-          {"Confirmar compra"}
+          {"Confirmar aplicacion"}
         </Button>
         <ConfirmCreateModal
           description={"confirm button"}

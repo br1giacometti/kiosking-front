@@ -1,8 +1,12 @@
 import OptionItem from "Base/types/OptionItem";
 import useAllBatchService from "Field/data/FieldRepository/hooks/useAllBatchService";
 
+interface BatchOptionItem extends OptionItem<number> {
+  fieldId: number;
+}
+
 interface UseBatchOptionsReturn {
-  options: OptionItem<number>[];
+  options: BatchOptionItem[];
   loading: boolean;
   error?: string;
 }

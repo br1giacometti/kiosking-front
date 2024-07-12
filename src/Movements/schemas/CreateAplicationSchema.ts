@@ -34,6 +34,17 @@ export const StockMovementDetailSchema = z.object({
   quantity: z.number(),
   buyPrice: z.number().optional(),
   description: z.string().min(1, { message: "Required" }),
+});
+
+export type StockMovementDetail = z.infer<typeof StockMovementDetailSchema>;
+
+const createAplicationSchema = z.object({
+  description: z.string(),
+  movementType: z.string(),
+  warehouseOriginId: warehouseOptionItem,
+  batchId: batchOptionItem,
+  aplicatorId: aplicatorOptionItem,
+  // voucherDescription: z.string(),
   value: z.string().transform((val, ctx) => {
     const parsed = Number.parseInt(val.replaceAll(".", ""), 10);
     if (Number.isNaN(parsed)) {
@@ -54,17 +65,6 @@ export const StockMovementDetailSchema = z.object({
     }
     return parsed;
   }),
-});
-
-export type StockMovementDetail = z.infer<typeof StockMovementDetailSchema>;
-
-const createAplicationSchema = z.object({
-  description: z.string(),
-  movementType: z.string(),
-  warehouseOriginId: warehouseOptionItem,
-  batchId: batchOptionItem,
-  aplicatorId: aplicatorOptionItem,
-  voucherDescription: z.string(),
   fieldId: fieldOptionItem,
   stockMovementDetail: z.array(StockMovementDetailSchema),
 });
