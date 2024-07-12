@@ -8,7 +8,9 @@ const CreateBuyProvider = ({
   stockMovementDetail: stockMovementDetail,
   ...props
 }: PropsWithChildren<TCreateBuyContext>) => (
-  <CreateBuyContext.Provider value={{ ...props, stockMovementDetail: stockMovementDetail }}>
+  <CreateBuyContext.Provider
+    value={{ ...props, stockMovementDetail: stockMovementDetail }}
+  >
     {children}
   </CreateBuyContext.Provider>
 );

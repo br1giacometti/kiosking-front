@@ -3,22 +3,22 @@ import { User } from "Auth/types";
 import { Batch } from "Field/data/FieldRepository";
 import { Warehouse } from "Warehouse/data/WarehouseRepository";
 
-export interface StockMovementDetail {
+export interface StockMovementsDetail {
   productId: number;
   quantity: number;
   buyPrice?: number;
 }
 
 export interface CreateMovementDto {
-  batchId?: number;
   value?: number;
   description: string;
   movementType: "BUY" | "APLICATION" | "MOVEMENT" | string;
-  stockMovementDetail?: StockMovementDetail[];
+  stockMovementDetail?: StockMovementsDetail[];
   voucherDescription?: string;
   date?: Date;
   warehouseOriginId?: number;
   warehouseDestinyId?: number;
+  batchId?: number;
   aplicatorId?: number;
 }
 
@@ -28,7 +28,7 @@ export interface Movements {
   // user: User;
   MovementType: string;
   date: Date;
-  stockMovementDetail?: StockMovementDetail[];
+  stockMovementDetail?: StockMovementsDetail[];
   warehouseOrigin?: Warehouse;
   warehouseDestiny?: Warehouse;
   aplicator?: Aplicator;
@@ -41,7 +41,7 @@ export interface MovementListItem {
   value: number;
   user: User;
   movementType: string;
-  date: Date;
+  createdAt: Date;
   warehouseDestiny: string;
   id: number;
 }

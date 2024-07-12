@@ -4,6 +4,7 @@ export interface Batch {
   description: string;
   hectares: number;
   id: number;
+  fieldId: number;
 }
 
 export interface Field {
@@ -16,4 +17,8 @@ export interface Field {
 export interface FieldRepository {
   createField: (body: CreateFieldSchema) => Promise<Field>;
   getAllField: () => Promise<Field[]>;
+}
+
+export interface BatchRepository {
+  getAllBatch: () => Promise<Batch[]>;
 }

@@ -4,13 +4,13 @@ import { useTranslation } from "Base/i18n";
 
 interface MovementsHeaderProps {
   navigateToCreateBuyMovement: () => void;
-  navigateToCreateRendition: () => void;
+  navigateToCreateAplication: () => void;
   navigateToCreateWithdraw: () => void;
 }
 
 const MovementsHeader = ({
   navigateToCreateBuyMovement,
-  navigateToCreateRendition,
+  navigateToCreateAplication,
   navigateToCreateWithdraw,
 }: MovementsHeaderProps) => {
   const { t } = useTranslation(["movements"]);
@@ -35,16 +35,9 @@ const MovementsHeader = ({
           leftIcon={<Icon as={PlusIcon} />}
           mr="2"
           variant="outline"
-          onClick={navigateToCreateRendition}
+          onClick={navigateToCreateAplication}
         >
           {"Generar aplicacion"}
-        </Button>
-        <Button
-          leftIcon={<Icon as={PlusIcon} />}
-          variant="outline"
-          onClick={navigateToCreateWithdraw}
-        >
-          {"Generar retiro"}
         </Button>
       </Stack>
     </Stack>

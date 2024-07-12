@@ -1,69 +1,92 @@
-import { useEffect, useMemo, useState } from "react";
-import { useFormContext } from "react-hook-form";
-
+import { useEffect, useState } from "react";
+import { Controller, FieldErrors, useFormContext } from "react-hook-form";
 import { Button, useDisclosure, useToast } from "@chakra-ui/react";
-
 import { useTranslation } from "Base/i18n";
-import { CreateMovementsSchema } from "Movements/schemas/CreateMovementsSchema";
 import useCreateMovementsStates from "Movements/hooks/useCreateMovementsStates";
 import { useCreateMovementsService } from "Movements/data/MovementsRepository";
 import FormPageLayout from "Base/layout/FormPageLayout";
 import FormContainerLayout from "Base/layout/FormContainerLayout";
 import FormSectionLayout from "Base/layout/FormSectionLayout";
-import FormInputNumber from "Base/components/FormInputNumber";
 import ConfirmCreateModal from "Movements/components/ConfirmCreateDialog";
-import FormSelectSingleWH from "./FormSelectSingleWH";
-import FormAddProductsDetails from "./FormAddProductsDetails";
-
-// import useProductsOptions from "Movements/hooks/useProductsOptions";
-import FormSelectSingleProduct from "./FormSelectSingleProduct";
-import FormCreateBuyDetails from "./FormCreateBuyDetails";
-
-// import { StatusCard } from "Base/components";
+import FormCreateAplicationDetails from "./FormCreateAplicationDetails";
+import { CreateAplicationSchema } from "Movements/schemas/CreateAplicationSchema";
+import { FormInputText, FormSelect } from "Base/components";
+import useWareHouseOptions from "Movements/hooks/useWareHouseOptions";
+import useAplicatorOptions from "Movements/hooks/useAplicatorOptions";
+import useFieldOptions from "Movements/hooks/useFieldOptions";
+import useBatchOptions from "Movements/hooks/useBatchOptions";
+import FormInputNumber from "Base/components/FormInputNumber";
 
 interface CreateMovementsProps {
   navigateToMovements: () => void;
 }
-const CreateBuyMovement = ({ navigateToMovements }: CreateMovementsProps) => {
+
+const CreateAplicationMovement = ({
+  navigateToMovements,
+}: CreateMovementsProps) => {
   const toast = useToast();
   const { t } = useTranslation("movements");
   const {
     control,
-    watch,
     handleSubmit,
     formState: { errors },
+    register,
     reset,
-  } = useFormContext<CreateMovementsSchema>();
+    watch,
+  } = useFormContext<CreateAplicationSchema>();
+
+  const { options: warehouseOptions, loading: warehouseLoading } =
+    useWareHouseOptions();
+  const { options: aplicatorOptions, loading: aplicatorLoading } =
+    useAplicatorOptions();
+  const { options: fieldOptions, loading: fieldLoading } = useFieldOptions();
+  const { options: batchOptions, loading: batchLoading } = useBatchOptions();
 
   const { loading, error, startFetch, successFetch, failureFetch } =
     useCreateMovementsStates();
-
   const { isOpen, onClose, onOpen } = useDisclosure({ defaultIsOpen: false });
-
   const { createMovements } = useCreateMovementsService();
 
-  const handleCreateMovements = (data: CreateMovementsSchema) => {
+  const [filteredBatchOptions, setFilteredBatchOptions] =
+    useState(batchOptions);
+
+  const fieldId = watch("fieldId");
+
+  useEffect(() => {
+    if (fieldId) {
+      const newBatchOptions = batchOptions.filter(
+        (batch) => batch.fieldId === fieldId.value
+      );
+      setFilteredBatchOptions(newBatchOptions);
+    } else {
+      setFilteredBatchOptions(batchOptions);
+    }
+  }, [fieldId, batchOptions]);
+
+  const handleCreateMovements = (data: CreateAplicationSchema) => {
+    console.log("startFetch :>> ", data);
     startFetch();
 
     createMovements({
-      warehouseOriginId: data.warehouseOriginId.value,
       stockMovementDetail: data.stockMovementDetail.map((product) => ({
-        productId: product.productId,
+        productId: product.product.productId,
         quantity: product.quantity,
         buyPrice: product.buyPrice,
       })),
       date: new Date(),
-      voucherDescription: "vaucher Description  hardcode",
-      description: "Test 1  hardcode",
+      description: data.description,
       movementType: data.movementType,
-      value: 1500, // hardcode
+      aplicatorId: data.aplicatorId.value,
+      warehouseOriginId: data.warehouseOriginId.value,
+      batchId: data.batchId.value,
+      value: data.value,
     })
       .then((movementsCreated) => {
         reset();
         successFetch(movementsCreated);
         toast({
           status: "success",
-          description: ` ${t("createMovement.message.success.create")} `,
+          description: ` ${"Creado correctamente"} `,
         });
         onClose();
         navigateToMovements();
@@ -72,6 +95,10 @@ const CreateBuyMovement = ({ navigateToMovements }: CreateMovementsProps) => {
         const errorMessage = e.response.data.message;
         failureFetch(errorMessage);
       });
+  };
+
+  const handleSubmitError = (errors: FieldErrors<CreateAplicationSchema>) => {
+    console.log("errors :>> ", errors);
   };
 
   useEffect(() => {
@@ -84,30 +111,120 @@ const CreateBuyMovement = ({ navigateToMovements }: CreateMovementsProps) => {
     <FormPageLayout onSubmit={handleSubmit(handleCreateMovements)}>
       <FormContainerLayout>
         <FormSectionLayout>
-          <FormSelectSingleWH />
-          <FormSelectSingleWH />
-
-          <FormInputNumber
-            isRequired
-            control={control as any}
-            errorMessage={
-              errors.value
-                ? (t(`errors.${errors.value.message}`, {
-                    ns: "common",
-                  }) as string)
-                : undefined
-            }
-            id="value"
-            label={"Valor total de la compra"}
-            leftIcon="$"
-            name="value"
-            thousandSeparator="."
-            type="number"
+          <Controller
+            control={control}
+            name="warehouseOriginId"
+            render={({ field }) => (
+              <FormSelect
+                ref={field.ref}
+                isRequired
+                errorMessage={
+                  errors.warehouseOriginId?.message
+                    ? "Debe seleccionar un deposito de origen"
+                    : undefined
+                }
+                isLoading={warehouseLoading}
+                label={"Deposito de origen"}
+                name={field.name}
+                options={warehouseOptions}
+                value={
+                  field.value &&
+                  "value" in field.value &&
+                  field.value.value !== null
+                    ? field.value
+                    : null
+                }
+                onChange={field.onChange}
+              />
+            )}
           />
 
-          <FormInputNumber
+          <Controller
+            control={control}
+            name="aplicatorId"
+            render={({ field }) => (
+              <FormSelect
+                ref={field.ref}
+                isRequired
+                errorMessage={
+                  errors.aplicatorId?.message
+                    ? "Debe seleccionar un aplicador"
+                    : undefined
+                }
+                isLoading={aplicatorLoading}
+                label={"Aplicador"}
+                name={field.name}
+                options={aplicatorOptions}
+                value={
+                  field.value &&
+                  "value" in field.value &&
+                  field.value.value !== null
+                    ? field.value
+                    : null
+                }
+                onChange={field.onChange}
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="fieldId"
+            render={({ field }) => (
+              <FormSelect
+                ref={field.ref}
+                isRequired
+                errorMessage={
+                  errors.fieldId?.message
+                    ? "Debe seleccionar un campo"
+                    : undefined
+                }
+                isLoading={fieldLoading}
+                label={"Campo"}
+                name={field.name}
+                options={fieldOptions}
+                value={
+                  field.value &&
+                  "value" in field.value &&
+                  field.value.value !== null
+                    ? field.value
+                    : null
+                }
+                onChange={field.onChange}
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="batchId"
+            render={({ field }) => (
+              <FormSelect
+                ref={field.ref}
+                isRequired
+                errorMessage={
+                  errors.batchId?.message
+                    ? "Debe seleccionar un lote"
+                    : undefined
+                }
+                isLoading={batchLoading}
+                label={"Lote"}
+                name={field.name}
+                options={filteredBatchOptions}
+                value={
+                  field.value &&
+                  "value" in field.value &&
+                  field.value.value !== null
+                    ? field.value
+                    : null
+                }
+                onChange={field.onChange}
+              />
+            )}
+          />
+
+          <FormInputText
             isRequired
-            control={control as any}
             errorMessage={
               errors.description
                 ? (t(`errors.${errors.description.message}`, {
@@ -116,28 +233,44 @@ const CreateBuyMovement = ({ navigateToMovements }: CreateMovementsProps) => {
                 : undefined
             }
             id="description"
-            label={"Descripcion de la compra"}
+            label={"Descripcion de la aplicacion"}
             name="description"
-            type="text"
+            inputProps={{ ...register("description") }}
           />
         </FormSectionLayout>
-        <FormCreateBuyDetails />
-        <FormAddProductsDetails></FormAddProductsDetails>
+        <FormInputNumber
+          isRequired
+          control={control}
+          errorMessage={
+            errors.value
+              ? (t(`errors.${errors.value.message}`, {
+                  ns: "common",
+                }) as string)
+              : undefined
+          }
+          id="value"
+          label={"Valor aproximado de la aplicacion"}
+          leftIcon="$"
+          name="value"
+          thousandSeparator="."
+          // type=""
+        />
+        <FormCreateAplicationDetails />
 
         <Button colorScheme="main" isLoading={loading} onClick={onOpen}>
-          {"Confirmar compra"}
+          {"Confirmar aplicacion"}
         </Button>
         <ConfirmCreateModal
-          description={"Desea confirmar la operacion?"}
-          isLoading={loading} 
+          description={"confirm button"}
+          isLoading={loading}
           isOpen={isOpen}
           title={"Confirmar"}
           onClose={onClose}
-          onConfirm={handleSubmit(handleCreateMovements)}
+          onConfirm={handleSubmit(handleCreateMovements, handleSubmitError)}
         />
       </FormContainerLayout>
     </FormPageLayout>
   );
 };
 
-export default CreateBuyMovement;
+export default CreateAplicationMovement;
