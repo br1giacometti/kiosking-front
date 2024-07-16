@@ -1,0 +1,11 @@
+{
+  "datatable": {
+    "label": {
+      "description": "Description",
+      "buyPrice": "Purchase Price",
+      "sellPrice": "Selling Price",
+      "minimumQuantity": "Minimum Quantity",
+      "createdAt": "Created"
+    }
+  }
+}

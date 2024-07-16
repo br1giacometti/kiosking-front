@@ -1,0 +1,24 @@
+{
+  "actions": {
+    "create": "Add warehouse"
+  },
+  "datatable": {
+    "label": {
+      "description": "Description"
+    }
+  },
+  "create": {
+    "label": {
+      "description": "Description"
+    },
+    "title": "Add Warehouse",
+    "button": {
+      "submit": "Add Warehouse"
+    }
+  },
+  "toast": {
+    "create": {
+      "success": "Warehouse added successfully"
+    }
+  }
+}

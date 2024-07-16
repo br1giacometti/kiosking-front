@@ -1,0 +1,24 @@
+{
+  "actions": {
+    "create": "Agregar almacén"
+  },
+  "datatable": {
+    "label": {
+      "description": "Descripción"
+    }
+  },
+  "create": {
+    "title": "Añadir almacén",
+    "label": {
+      "description": "Descripción del almacén"
+    },
+    "button": {
+      "submit": "Añadir almacén"
+    }
+  },
+  "toast": {
+    "create": {
+      "success": "Almacén añadido con exito"
+    }
+  }
+}

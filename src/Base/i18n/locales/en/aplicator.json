@@ -1,0 +1,24 @@
+{
+  "actions": {
+    "create": "Add aplicator"
+  },
+  "datatable": {
+    "label": {
+      "description": "Description"
+    }
+  },
+  "create": {
+    "label": {
+      "description": "Description"
+    },
+    "title": "Add Aplicator",
+    "button": {
+      "submit": "Add Aplicator"
+    }
+  },
+  "toast": {
+    "create": {
+      "success": "Aplicator added successfully"
+    }
+  }
+}

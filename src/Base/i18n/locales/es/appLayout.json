@@ -1,0 +1,19 @@
+{
+  "header": {
+    "menu": {
+      "myAccount": "Mi cuenta",
+      "configuration": "Configuración",
+      "logout": "Cerrar sesión"
+    }
+  },
+  "sidebar": {
+    "menu": {
+      "home": "Inicio",
+      "product": "Productos",
+      "field": "Campos",
+      "aplicator": "Aplicadores",
+      "warehouse": "Almacén",
+      "movements": "Movimientos"
+    }
+  }
+}

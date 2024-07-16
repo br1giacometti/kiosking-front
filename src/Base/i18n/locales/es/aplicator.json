@@ -1,0 +1,24 @@
+{
+  "actions": {
+    "create": "Agregar aplicador"
+  },
+  "datatable": {
+    "label": {
+      "description": "Descripción"
+    }
+  },
+  "create": {
+    "title": "Añadir aplicador",
+    "label": {
+      "description": "Nombre o alias del aplicador"
+    },
+    "button": {
+      "submit": "Añadir aplicar"
+    }
+  },
+  "toast": {
+    "create": {
+      "success": "Aplicador añadido con exito"
+    }
+  }
+}
