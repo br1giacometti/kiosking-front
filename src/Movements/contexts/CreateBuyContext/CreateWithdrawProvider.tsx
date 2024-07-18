@@ -5,10 +5,10 @@ import CreateWithdrawContext, {
 
 const CreateWithdrawProvider = ({
   children,
-  cashBoxMovementsDetail,
+  stockMovementDetail,
   ...props
 }: PropsWithChildren<TCreateWithdrawContext>) => (
-  <CreateWithdrawContext.Provider value={{ ...props, cashBoxMovementsDetail }}>
+  <CreateWithdrawContext.Provider value={{ ...props, stockMovementDetail }}>
     {children}
   </CreateWithdrawContext.Provider>
 );

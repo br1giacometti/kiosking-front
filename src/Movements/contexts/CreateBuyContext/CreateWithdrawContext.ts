@@ -3,9 +3,9 @@ import { createContext } from "react";
 import { UseFieldArrayReturn, UseFormReturn } from "react-hook-form";
 
 export type CreateWithdrawContext = UseFormReturn<CreateWithdrawSchema> & {
-  warehouseMovementsDetail: UseFieldArrayReturn<
+  stockMovementDetail: UseFieldArrayReturn<
     CreateWithdrawSchema,
-    "warehouseMovementsDetail"
+    "stockMovementDetail"
   >;
 };
 

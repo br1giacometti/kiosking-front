@@ -237,24 +237,25 @@ const CreateAplicationMovement = ({
             name="description"
             inputProps={{ ...register("description") }}
           />
+          <FormInputNumber
+            isRequired
+            control={control}
+            errorMessage={
+              errors.value
+                ? (t(`errors.${errors.value.message}`, {
+                    ns: "common",
+                  }) as string)
+                : undefined
+            }
+            id="value"
+            label={"Valor aproximado de la aplicacion"}
+            leftIcon="$"
+            name="value"
+            thousandSeparator="."
+            // type=""
+          />
         </FormSectionLayout>
-        <FormInputNumber
-          isRequired
-          control={control}
-          errorMessage={
-            errors.value
-              ? (t(`errors.${errors.value.message}`, {
-                  ns: "common",
-                }) as string)
-              : undefined
-          }
-          id="value"
-          label={"Valor aproximado de la aplicacion"}
-          leftIcon="$"
-          name="value"
-          thousandSeparator="."
-          // type=""
-        />
+
         <FormCreateAplicationDetails />
 
         <Button colorScheme="main" isLoading={loading} onClick={onOpen}>
