@@ -1,4 +1,4 @@
-import batchClient from "./client";
+import batchClient from "./clientBatch";
 import { BatchRepository } from "./types";
 import getAllBatch from "./services/getAllBatch";
 

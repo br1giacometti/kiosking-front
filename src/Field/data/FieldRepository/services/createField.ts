@@ -1,6 +1,6 @@
 import { isAxiosError } from "axios";
 import { CreateFieldSchema } from "Field/schemas/createFieldSchema";
-import fieldClient from "../client";
+import fieldClient from "../fieldClient";
 
 const createField = async (body: CreateFieldSchema) => {
   try {

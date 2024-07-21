@@ -1,4 +1,4 @@
-import fieldClient from "../client";
+import fieldClient from "../fieldClient";
 import { Field } from "../types";
 
 const getAllField = async () => {
