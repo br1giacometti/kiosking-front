@@ -88,9 +88,7 @@ const CreateProduct = ({ navigateToProduct }: CreateProductProps) => {
             }
             id="minimumQuantity"
             label={"Cantidad Minima"}
-            leftIcon="$"
             name="Cantidad Minima"
-            thousandSeparator="."
             type="number"
           />
         </FormSectionLayout>
