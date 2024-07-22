@@ -80,34 +80,16 @@ const CreateProduct = ({ navigateToProduct }: CreateProductProps) => {
             isRequired
             control={control as any}
             errorMessage={
-              errors.buyPrice
-                ? (t(`errors.${errors.buyPrice.message}`, {
+              errors.minimumQuantity
+                ? (t(`errors.${errors.minimumQuantity.message}`, {
                     ns: "common",
                   }) as string)
                 : undefined
             }
-            id="buyPrice"
-            label={t("create.label.buyPrice")}
+            id="minimumQuantity"
+            label={"Cantidad Minima"}
             leftIcon="$"
-            name="buyPrice"
-            thousandSeparator="."
-            type="number"
-          />
-
-          <FormInputNumber
-            isRequired
-            control={control as any}
-            errorMessage={
-              errors.sellPrice
-                ? (t(`errors.${errors.sellPrice.message}`, {
-                    ns: "common",
-                  }) as string)
-                : undefined
-            }
-            id="sellPrice"
-            label={t("create.label.sellPrice")}
-            leftIcon="$"
-            name="sellPrice"
+            name="Cantidad Minima"
             thousandSeparator="."
             type="number"
           />

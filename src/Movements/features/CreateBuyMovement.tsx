@@ -98,11 +98,11 @@ const CreateBuyMovement = ({ navigateToMovements }: CreateMovementsProps) => {
                 isRequired
                 errorMessage={
                   errors.warehouseDestinyId?.message
-                    ? "Debe seleccionar un deposito de origen"
+                    ? "Debe seleccionar un deposito de destino"
                     : undefined
                 }
                 isLoading={warehouseLoading}
-                label={"Deposito"}
+                label={"Deposito destino productos"}
                 name={field.name}
                 options={warehouseOptions}
                 value={
@@ -128,7 +128,7 @@ const CreateBuyMovement = ({ navigateToMovements }: CreateMovementsProps) => {
                 : undefined
             }
             id="value"
-            label={"Valor total de la compra"}
+            label={"Valor aproximado total de la compra"}
             leftIcon="$"
             name="value"
             thousandSeparator="."

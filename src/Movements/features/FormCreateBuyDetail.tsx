@@ -111,7 +111,7 @@ const FormCreateBuyDetail = ({ index }: FormCreateOwnerProps) => {
                   undefined
             }
             id="value"
-            label={"Valor"}
+            label={"Valor de compra"}
             leftIcon="$"
             name={`stockMovementDetail.${index}.value`}
           />
