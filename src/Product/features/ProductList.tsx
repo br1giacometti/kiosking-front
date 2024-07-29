@@ -14,28 +14,12 @@ const ProductList = () => {
   const columns: BaseColumn<Product>[] = useMemo(
     () => [
       {
-        label: "id",
-        selector: (row) => row.id,
-      },
-      {
         label: t("datatable.label.description"),
         selector: (row) => row.description,
       },
       {
-        label: t("datatable.label.buyPrice"),
-        selector: (row) => row.buyPrice,
-      },
-      {
         label: t("datatable.label.sellPrice"),
         selector: (row) => row.sellPrice,
-      },
-      {
-        label: t("datatable.label.minimumQuantity"),
-        selector: (row) => row.minimumQuantity,
-      },
-      {
-        label: t("datatable.label.createdAt"),
-        selector: (row) => formatDate(row.createdAt),
       },
     ],
     [t]

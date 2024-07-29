@@ -80,16 +80,30 @@ const CreateProduct = ({ navigateToProduct }: CreateProductProps) => {
             isRequired
             control={control as any}
             errorMessage={
-              errors.minimumQuantity
-                ? (t(`errors.${errors.minimumQuantity.message}`, {
+              errors.sellPrice
+                ? (t(`errors.${errors.sellPrice.message}`, {
                     ns: "common",
                   }) as string)
                 : undefined
             }
-            id="minimumQuantity"
-            label={"Cantidad Minima"}
-            name="minimumQuantity"
+            id="sellPrice"
+            label={"Precio"}
+            name="sellPrice"
             type="number"
+          />
+
+          <FormInputText
+            isRequired
+            errorMessage={
+              errors.barCode
+                ? (t(`errors.${errors.barCode.message}`, {
+                    ns: "common",
+                  }) as string) // TODO: Deberia eleminar este casteo: `as string`
+                : undefined
+            }
+            inputProps={register("barCode")}
+            label={"Codigo de Barra"}
+            name="barCode"
           />
         </FormSectionLayout>
       </FormContainerLayout>

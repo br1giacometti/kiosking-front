@@ -2,10 +2,9 @@ import { CreateProductSchema } from "Product/schemas/createProductSchema";
 
 export interface Product {
   description: string;
-  buyPrice: number;
   sellPrice: number;
   createdAt: Date;
-  minimumQuantity: number;
+  barCode: string;
   id: number;
 }
 
