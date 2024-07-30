@@ -14,7 +14,6 @@ export interface Product {
 
 export interface updatePriceProduct {
   sellPrice: number;
-  id: number;
 }
 
 export interface ProductRepository {

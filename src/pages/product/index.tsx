@@ -13,11 +13,19 @@ const ProductPage = () => {
     [router]
   );
 
+  const navigateToEditMultiProduct = useCallback(
+    () => router.push("/product/multi-edit"),
+    [router]
+  );
+
   return (
     <PageLayout>
       {{
         header: (
-          <ProductHeader navigateToCreateProduct={navigateToCreateProduct} />
+          <ProductHeader
+            navigateToCreateProduct={navigateToCreateProduct}
+            navigateToEditMultiProduct={navigateToEditMultiProduct}
+          />
         ),
         content: <ProductList />,
       }}

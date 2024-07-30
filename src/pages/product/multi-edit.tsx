@@ -17,7 +17,7 @@ const ProductCreatePage = () => {
   return (
     <PageLayout>
       {{
-        header: <Heading>{t("create.title")}</Heading>,
+        header: <Heading>{"Actualizar Precios"}</Heading>,
         content: <EditMultiProduct navigateToProduct={navigateToProduct} />,
       }}
     </PageLayout>

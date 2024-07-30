@@ -6,21 +6,34 @@ import { useTranslation } from "react-i18next";
 
 interface ProductHeaderProps {
   navigateToCreateProduct: () => void;
+  navigateToEditMultiProduct: () => void;
 }
 
-const ProductHeader = ({ navigateToCreateProduct }: ProductHeaderProps) => {
+const ProductHeader = ({
+  navigateToCreateProduct,
+  navigateToEditMultiProduct,
+}: ProductHeaderProps) => {
   const { t } = useTranslation(["product", "appLayout"]);
 
   return (
-    <Flex justify="space-between">
+    <Flex justify="space-between" align="center">
       <Heading>{t("sidebar.menu.product", { ns: "appLayout" })}</Heading>
-      <Button
-        leftIcon={<Icon as={PlusIcon} />}
-        variant="outline"
-        onClick={navigateToCreateProduct}
-      >
-        {t("actions.create")}
-      </Button>
+      <Flex gap={4}>
+        <Button
+          leftIcon={<Icon as={PlusIcon} />}
+          variant="outline"
+          onClick={navigateToCreateProduct}
+        >
+          {t("actions.create")}
+        </Button>
+        <Button
+          leftIcon={<Icon as={PlusIcon} />}
+          variant="outline"
+          onClick={navigateToEditMultiProduct}
+        >
+          Actualizar Precios
+        </Button>
+      </Flex>
     </Flex>
   );
 };
