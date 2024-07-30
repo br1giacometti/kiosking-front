@@ -11,7 +11,11 @@ import "@silevis/reactgrid/styles.css";
 import { Product, useAllProductService } from "Product/data/ProductRepository";
 import useUpdateProductService from "Product/data/ProductRepository/hooks/useUpdateProductService";
 
-const EdirMultiProduct: FC = () => {
+interface EditMultiProductProps {
+  navigateToProduct: () => void;
+}
+
+const EditMultiProduct = ({ navigateToProduct }: EditMultiProductProps) => {
   const { loading, productList, refetch } = useAllProductService(); // Usa refetch en lugar de invalidateCache
   const { updateProduct } = useUpdateProductService();
 
@@ -90,4 +94,4 @@ const EdirMultiProduct: FC = () => {
   );
 };
 
-export default EdirMultiProduct;
+export default EditMultiProduct;
