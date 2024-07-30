@@ -10,6 +10,9 @@ import {
 import "@silevis/reactgrid/styles.css";
 import { Product, useAllProductService } from "Product/data/ProductRepository";
 import useUpdateProductService from "Product/data/ProductRepository/hooks/useUpdateProductService";
+import { Box } from "@chakra-ui/react";
+import FormSectionLayout from "Base/layout/FormSectionLayout";
+import styles from "./gridStyles.module.css"; // Import the CSS module
 
 interface EditMultiProductProps {
   navigateToProduct: () => void;
@@ -20,9 +23,9 @@ const EditMultiProduct = ({ navigateToProduct }: EditMultiProductProps) => {
   const { updateProduct } = useUpdateProductService();
 
   const getColumns = (): Column[] => [
-    { columnId: "Id", width: 50 },
-    { columnId: "Nombre", width: 150 },
-    { columnId: "Precio", width: 450 },
+    { columnId: "Id", width: 10, resizable: true },
+    { columnId: "Nombre", width: 500, resizable: true },
+    { columnId: "Precio", width: 200, resizable: true },
   ];
 
   const headerRow: Row = {
@@ -88,9 +91,21 @@ const EditMultiProduct = ({ navigateToProduct }: EditMultiProductProps) => {
   };
 
   return (
-    <div style={{ height: "100vh" }}>
-      <ReactGrid rows={rows} columns={columns} onCellsChanged={handleChanges} />
-    </div>
+    <FormSectionLayout>
+      <Box p={100}>
+        <div className={styles.fullWidthGrid}>
+          <div className={styles.rgFlagCell}>
+            <div className={styles.rgFlagWrapper}>
+              <ReactGrid
+                rows={rows}
+                columns={columns}
+                onCellsChanged={handleChanges}
+              ></ReactGrid>
+            </div>
+          </div>
+        </div>
+      </Box>
+    </FormSectionLayout>
   );
 };
 

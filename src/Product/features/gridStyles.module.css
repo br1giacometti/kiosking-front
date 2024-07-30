@@ -1,0 +1,16 @@
+.rgFlagCell {
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.rgFlagWrapper {
+  width: 750px;
+  height: 100%;
+  background-size: cover;
+  border: 1px solid #000000;
+  font-size: 20px;
+}
+
+.fullWidthGrid {
+  width: 100%;
+}

@@ -3,6 +3,7 @@ import { mode } from "@chakra-ui/theme-tools";
 import colors from "./colors";
 import badgeTheme from "./components/badgeTheme";
 import buttonTheme from "./components/buttonTheme";
+import gridTheme from "./components/gridTheme";
 import headingTheme from "./components/headingTheme";
 
 const styles = {
@@ -22,7 +23,14 @@ const styles = {
 
 const theme = extendTheme({
   colors,
-  components: { Badge: badgeTheme, Button: buttonTheme, Heading: headingTheme },
+  components: {
+    Badge: badgeTheme,
+    Button: buttonTheme,
+    Heading: headingTheme,
+    ReactGrid: {
+      ...gridTheme.components.ReactGrid,
+    },
+  },
   styles,
 });
 
