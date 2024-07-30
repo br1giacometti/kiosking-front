@@ -7,7 +7,9 @@ import listProductReducer, {
 } from "../reducer/listProductReducer";
 
 const useAllProductService = () => {
-  const [invalidated, setInvalidateCache] = useState<boolean | undefined>();
+  const [invalidated, setInvalidateCache] = useState<boolean | undefined>(
+    undefined
+  );
 
   const repository = useMemo(
     () => createProductRepository(TokenHandler.getTokenFromCookies() || ""),
@@ -19,6 +21,11 @@ const useAllProductService = () => {
   );
 
   const invalidateCache = useCallback(() => setInvalidateCache(true), []);
+
+  // Nueva función refetch para volver a cargar los productos
+  const refetch = useCallback(() => {
+    setInvalidateCache(true);
+  }, []);
 
   useEffect(() => {
     if (invalidated || invalidated === undefined) {
@@ -40,7 +47,7 @@ const useAllProductService = () => {
     }
   }, [invalidated]);
 
-  return { productList, loading, error, invalidateCache };
+  return { productList, loading, error, refetch };
 };
 
 export default useAllProductService;

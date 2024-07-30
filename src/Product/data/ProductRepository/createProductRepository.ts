@@ -2,6 +2,7 @@ import { ProductRepository } from "./types";
 import createProduct from "./services/createProduct";
 import getAllProduct from "./services/getAllProduct";
 import productClient from "./client";
+import updateProduct from "./services/updateProduct";
 
 const createProductRepository = (userToken: string): ProductRepository => {
   productClient.defaults.headers.common = {
@@ -11,6 +12,7 @@ const createProductRepository = (userToken: string): ProductRepository => {
   return {
     createProduct,
     getAllProduct,
+    updateProduct,
   };
 };
 
