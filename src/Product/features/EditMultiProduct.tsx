@@ -1,5 +1,10 @@
-// pages/index.tsx
-import React, { FC } from "react";
+import React, {
+  ChangeEvent,
+  FC,
+  useCallback,
+  useState,
+  useEffect,
+} from "react";
 import {
   ReactGrid,
   Column,
@@ -10,17 +15,42 @@ import {
 import "@silevis/reactgrid/styles.css";
 import { Product, useAllProductService } from "Product/data/ProductRepository";
 import useUpdateProductService from "Product/data/ProductRepository/hooks/useUpdateProductService";
-import { Box } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Icon,
+  Input,
+  InputGroup,
+  InputRightElement,
+  Select,
+} from "@chakra-ui/react";
 import FormSectionLayout from "Base/layout/FormSectionLayout";
-import styles from "./gridStyles.module.css"; // Import the CSS module
+import styles from "./gridStyles.module.css";
+import useAllProductPaginated from "Product/data/ProductRepository/hooks/useAllProductPaginated";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import useCategoryOptions from "Product/hooks/useCategoryOptions";
 
 interface EditMultiProductProps {
   navigateToProduct: () => void;
 }
 
 const EditMultiProduct = ({ navigateToProduct }: EditMultiProductProps) => {
-  const { loading, productList, refetch } = useAllProductService(); // Usa refetch en lugar de invalidateCache
   const { updateProduct } = useUpdateProductService();
+  const {
+    error,
+    invalidateCache,
+    loading,
+    meta,
+    productList,
+    setQuery,
+    currentPage,
+    setCurrentPage,
+    refetch,
+  } = useAllProductPaginated();
+  const { options, loading: loading2 } = useCategoryOptions();
+
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const getColumns = (): Column[] => [
     { columnId: "Id", width: 10, resizable: true },
@@ -40,7 +70,7 @@ const EditMultiProduct = ({ navigateToProduct }: EditMultiProductProps) => {
   const getRows = (products: Product[]): Row[] => [
     headerRow,
     ...products.map<Row>((product) => ({
-      rowId: product.id.toString(), // Convertir id a string para rowId
+      rowId: product.id.toString(),
       cells: [
         { type: "number", value: product.id },
         { type: "text", text: product.description },
@@ -53,11 +83,9 @@ const EditMultiProduct = ({ navigateToProduct }: EditMultiProductProps) => {
   const columns = getColumns();
 
   const handleChanges = async (changes: CellChange<DefaultCellTypes>[]) => {
-    console.log("Cell changes:", changes);
-
     for (const change of changes) {
       if (change.type === "number" && change.columnId === "Precio") {
-        const rowId = Number(change.rowId); // Convertir rowId a número
+        const rowId = Number(change.rowId);
         const newPrice = change.newCell.value;
 
         const productToUpdate = productList.find(
@@ -74,11 +102,7 @@ const EditMultiProduct = ({ navigateToProduct }: EditMultiProductProps) => {
             };
 
             await updateProduct(updateBody, productToUpdate.id);
-            console.log(
-              `Successfully updated product with ID ${rowId} to new price: ${newPrice}`
-            );
 
-            // Refresca la lista de productos después de la actualización
             refetch();
           } catch (error) {
             console.error(`Error updating product with ID ${rowId}:`, error);
@@ -90,8 +114,63 @@ const EditMultiProduct = ({ navigateToProduct }: EditMultiProductProps) => {
     }
   };
 
+  const handleSearchChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    const searchValue = e.target.value;
+    setQuery(searchValue);
+  }, []);
+
+  const handleCategoryChange = useCallback(
+    (e: ChangeEvent<HTMLSelectElement>) => {
+      const categoryId = e.target.value ? Number(e.target.value) : null;
+      setSelectedCategory(categoryId);
+      console.log("categoryId", categoryId);
+    },
+    []
+  );
+
+  useEffect(() => {
+    let combinedQuery = "";
+    if (searchQuery) {
+      combinedQuery += `query=${searchQuery}`;
+    }
+    if (selectedCategory) {
+      if (combinedQuery.length > 0) {
+        combinedQuery += "&"; // Add "&" separator if search query already exists
+      }
+      combinedQuery += `&categoryId=${selectedCategory}`;
+    }
+    console.log("Combined Query:", combinedQuery); // Now shows "query=Coca&categoryId=2"
+    setQuery(combinedQuery);
+  }, [searchQuery, selectedCategory, setQuery]);
+
   return (
     <FormSectionLayout>
+      <Flex alignItems="center" justifyContent="space-between">
+        <Box>
+          <InputGroup>
+            <Input
+              placeholder="Busca un producto"
+              onChange={handleSearchChange}
+            />
+            <InputRightElement>
+              <Icon as={MagnifyingGlassIcon} />
+            </InputRightElement>
+          </InputGroup>
+        </Box>
+        <Box>
+          <Select
+            placeholder="Selecciona una categoría"
+            onChange={handleCategoryChange}
+            value={selectedCategory || ""}
+          >
+            {options.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </Select>
+        </Box>
+      </Flex>
       <Box p={100}>
         <div className={styles.fullWidthGrid}>
           <div className={styles.rgFlagCell}>
@@ -100,7 +179,7 @@ const EditMultiProduct = ({ navigateToProduct }: EditMultiProductProps) => {
                 rows={rows}
                 columns={columns}
                 onCellsChanged={handleChanges}
-              ></ReactGrid>
+              />
             </div>
           </div>
         </div>
