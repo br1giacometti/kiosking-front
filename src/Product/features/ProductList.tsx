@@ -5,6 +5,7 @@ import DataTable, { BaseColumn } from "Base/components/DataTable";
 
 import formatDate from "Base/utils/formatters/formatDate";
 import { Product, useAllProductService } from "Product/data/ProductRepository";
+import formatPrice from "Base/utils/formatters/formatPrice";
 
 const ProductList = () => {
   const { t } = useTranslation("product");
@@ -19,7 +20,11 @@ const ProductList = () => {
       },
       {
         label: t("datatable.label.sellPrice"),
-        selector: (row) => row.sellPrice,
+        selector: (row) => formatPrice(row.sellPrice),
+      },
+      {
+        label: t("datatable.label.sellPrice"),
+        selector: (row) => row.category.description,
       },
     ],
     [t]

@@ -1,3 +1,4 @@
+import { Category } from "Category/data/CategoryRepository";
 import { CreateProductSchema } from "Product/schemas/createProductSchema";
 
 export interface Product {
@@ -5,6 +6,8 @@ export interface Product {
   sellPrice: number;
   createdAt: Date;
   barCode: string;
+  categoryId: number;
+  category: Category;
   id: number;
 }
 

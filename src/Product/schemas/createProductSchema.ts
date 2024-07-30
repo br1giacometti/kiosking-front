@@ -10,7 +10,6 @@ const createProductSchema = z.object({
         code: z.ZodIssueCode.custom,
         message: "Required",
       });
-
       return z.NEVER;
     }
     if (parsed <= 0) {
@@ -18,11 +17,11 @@ const createProductSchema = z.object({
         code: z.ZodIssueCode.custom,
         message: "mustBePositive",
       });
-
       return z.NEVER;
     }
     return parsed;
   }),
+  categoryId: z.number().min(1, { message: "Debe seleccionar una categoria" }),
 });
 
 export type CreateProductSchema = z.infer<typeof createProductSchema>;

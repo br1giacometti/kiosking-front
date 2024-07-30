@@ -11,7 +11,8 @@ export type AppTranslations = {
     | "field"
     | "aplicator"
     | "warehouse"
-    | "movements"]: ResourceKey;
+    | "movements"
+    | "category"]: ResourceKey;
 };
 
 type Resource = {
@@ -31,6 +32,7 @@ const resources: Resource = {
     aplicator: require("./locales/en/aplicator.json"),
     warehouse: require("./locales/en/warehouse.json"),
     movements: require("./locales/en/movements.json"),
+    category: require("./locales/en/category.json"),
   },
   es: {
     appLayout: require("./locales/es/appLayout.json"),
@@ -41,6 +43,7 @@ const resources: Resource = {
     aplicator: require("./locales/es/aplicator.json"),
     warehouse: require("./locales/es/warehouse.json"),
     movements: require("./locales/es/movements.json"),
+    category: require("./locales/es/category.json"),
   },
 };
 

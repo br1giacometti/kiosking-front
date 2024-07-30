@@ -31,6 +31,11 @@ const AppLayout = ({ children }: PropsWithChildren) => {
       icon: RectangleStackIcon,
     },
     {
+      title: t("Categorias"),
+      path: "/category",
+      icon: Square3Stack3DIcon,
+    },
+    {
       title: t("sidebar.menu.field"),
       path: "/field",
       icon: Square3Stack3DIcon,
