@@ -10,12 +10,7 @@ import FormSectionLayout from "Base/layout/FormSectionLayout";
 import ConfirmCreateModal from "Movements/components/ConfirmCreateDialog";
 import FormCreateAplicationDetails from "./FormCreateAplicationDetails";
 import { CreateAplicationSchema } from "Movements/schemas/CreateAplicationSchema";
-import { FormInputText, FormSelect } from "Base/components";
 import useWareHouseOptions from "Movements/hooks/useWareHouseOptions";
-import useAplicatorOptions from "Movements/hooks/useAplicatorOptions";
-import useFieldOptions from "Movements/hooks/useFieldOptions";
-import useBatchOptions from "Movements/hooks/useBatchOptions";
-import FormInputNumber from "Base/components/FormInputNumber";
 
 interface CreateMovementsProps {
   navigateToMovements: () => void;
@@ -34,8 +29,6 @@ const CreateAplicationMovement = ({
     reset,
   } = useFormContext<CreateAplicationSchema>();
 
-  const { options: warehouseOptions, loading: warehouseLoading } =
-    useWareHouseOptions();
   const { createMovements } = useCreateMovementsService();
 
   const { loading, error, startFetch, successFetch, failureFetch } =
@@ -65,7 +58,6 @@ const CreateAplicationMovement = ({
           description: "Creado correctamente",
         });
         onClose();
-        navigateToMovements();
       })
       .catch((e) => {
         const errorMessage = e.response.data.message;
