@@ -15,6 +15,8 @@ import {
   InputGroup,
   InputRightElement,
   Select,
+  Button,
+  useToast,
 } from "@chakra-ui/react";
 import FormSectionLayout from "Base/layout/FormSectionLayout";
 import styles from "./gridStyles.module.css";
@@ -28,6 +30,7 @@ interface EditMultiProductProps {
 }
 
 const EditMultiProduct = ({ navigateToProduct }: EditMultiProductProps) => {
+  const toast = useToast();
   const { updateProduct } = useUpdateProductService();
   const {
     error,
@@ -44,6 +47,9 @@ const EditMultiProduct = ({ navigateToProduct }: EditMultiProductProps) => {
 
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [editedPrices, setEditedPrices] = useState<Map<number, number>>(
+    new Map()
+  );
 
   const handleSearchChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const searchValue = e.target.value;
@@ -54,7 +60,6 @@ const EditMultiProduct = ({ navigateToProduct }: EditMultiProductProps) => {
     (e: ChangeEvent<HTMLSelectElement>) => {
       const categoryId = e.target.value ? Number(e.target.value) : null;
       setSelectedCategory(categoryId);
-      console.log("categoryId", categoryId);
     },
     []
   );
@@ -74,32 +79,55 @@ const EditMultiProduct = ({ navigateToProduct }: EditMultiProductProps) => {
     setQuery(combinedQuery);
   }, [searchQuery, selectedCategory, setQuery]);
 
-  const handlePriceChange = useCallback(
-    async (productId: number, value: number) => {
-      const productToUpdate = productList.find(
-        (product) => product.id === productId
-      );
+  const handlePriceChange = useCallback((productId: number, value: number) => {
+    setEditedPrices((prevPrices) => new Map(prevPrices).set(productId, value));
+  }, []);
 
-      if (productToUpdate) {
-        try {
+  const handleUpdatePrices = useCallback(async () => {
+    try {
+      for (const [productId, newPrice] of editedPrices.entries()) {
+        const productToUpdate = productList.find(
+          (product) => product.id === productId
+        );
+
+        if (productToUpdate) {
           const updateBody = {
             description: productToUpdate.description,
             barCode: productToUpdate.barCode,
-            sellPrice: value,
+            sellPrice: newPrice,
             categoryId: productToUpdate.categoryId,
           };
 
           await updateProduct(updateBody, productToUpdate.id);
-          refetch();
-        } catch (error) {
-          console.error(`Error updating product with ID ${productId}:`, error);
+        } else {
+          console.error(`Product with ID ${productId} not found.`);
         }
-      } else {
-        console.error(`Product with ID ${productId} not found.`);
       }
-    },
-    [productList, updateProduct, refetch]
-  );
+      refetch();
+      setEditedPrices(new Map()); // Clear edited prices after update
+      // Mostrar toast de éxito
+      toast({
+        title: "Precios actualizados.",
+        description:
+          "Los precios de los productos se han actualizado correctamente.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+    } catch (error) {
+      console.error("Error updating products:", error);
+
+      // Mostrar toast de error
+      toast({
+        title: "Error al actualizar precios.",
+        description:
+          "Hubo un error al intentar actualizar los precios de los productos.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  }, [editedPrices, productList, updateProduct, refetch, toast]);
 
   const columns: BaseColumn<Product>[] = [
     { label: "Id", selector: (row) => row.id },
@@ -109,7 +137,7 @@ const EditMultiProduct = ({ navigateToProduct }: EditMultiProductProps) => {
       selector: (row) => (
         <Input
           type="number"
-          value={row.sellPrice || 0}
+          value={editedPrices.get(row.id) || row.sellPrice || 0}
           onChange={(e) => handlePriceChange(row.id, Number(e.target.value))}
         />
       ),
@@ -148,6 +176,15 @@ const EditMultiProduct = ({ navigateToProduct }: EditMultiProductProps) => {
         <div className={styles.fullWidthGrid}>
           <DataTable columns={columns} data={productList} />
         </div>
+      </Box>
+      <Box>
+        <Button
+          colorScheme="main"
+          isLoading={loading}
+          onClick={handleUpdatePrices}
+        >
+          Actualizar Precios
+        </Button>
       </Box>
     </FormSectionLayout>
   );
