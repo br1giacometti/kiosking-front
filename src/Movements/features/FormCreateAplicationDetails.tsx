@@ -101,6 +101,23 @@ const FormCreateAplicationDetails = () => {
     [remove]
   );
 
+  const handleSearchKeyPress = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        const product = options.find(
+          (option) =>
+            option.label.toLowerCase() === searchTerm.toLowerCase() ||
+            option.barCode.toLowerCase() === searchTerm.toLowerCase()
+        );
+        if (product) {
+          handleSelectProduct(product as ProductOption);
+        }
+      }
+    },
+    [options, searchTerm, handleSelectProduct]
+  );
+
   const totalAmount = useMemo(
     () =>
       fields.reduce(
@@ -175,6 +192,7 @@ const FormCreateAplicationDetails = () => {
               variant="outline"
               value={searchTerm}
               onChange={handleSearchChange}
+              onKeyPress={handleSearchKeyPress}
             />
             <InputRightElement>
               <Icon as={MagnifyingGlassIcon} />
