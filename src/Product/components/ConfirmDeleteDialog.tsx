@@ -46,7 +46,7 @@ const ConfirmDeleteModal = ({
 
           <AlertDialogFooter>
             <Button ref={cancelRef} onClick={onClose}>
-              {t("modal.button.cancel")}
+              {t("Cancelar")}
             </Button>
             <Button
               colorScheme="red"
@@ -54,7 +54,7 @@ const ConfirmDeleteModal = ({
               ml={3}
               onClick={onConfirm}
             >
-              {t("modal.button.submit")}
+              {t("Confirmar")}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

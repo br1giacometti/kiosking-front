@@ -121,7 +121,7 @@ const CreateProduct = ({ navigateToProduct }: CreateProductProps) => {
                     : undefined
                 }
                 isLoading={loading2}
-                label={t("create.steps.step4.description")}
+                label={t("Categoria")}
                 name={field.name}
                 options={options}
                 value={

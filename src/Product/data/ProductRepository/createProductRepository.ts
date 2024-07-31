@@ -2,7 +2,10 @@ import { ProductRepository } from "./types";
 import createProduct from "./services/createProduct";
 import getAllProduct from "./services/getAllProduct";
 import productClient from "./client";
+import updatePriceProduct from "./services/updatePriceProduct";
 import updateProduct from "./services/updateProduct";
+import deleteProduct from "./services/deleteProduct";
+import getProductById from "./services/getProductById";
 import getAllProductPaginated from "./services/getAllProductPaginated";
 
 const createProductRepository = (userToken: string): ProductRepository => {
@@ -13,8 +16,11 @@ const createProductRepository = (userToken: string): ProductRepository => {
   return {
     createProduct,
     getAllProduct,
-    updateProduct,
+    updatePriceProduct,
     getAllProductPaginated,
+    deleteProduct,
+    getProductById,
+    updateProduct,
   };
 };
 

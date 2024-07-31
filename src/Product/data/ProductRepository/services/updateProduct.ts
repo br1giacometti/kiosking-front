@@ -1,13 +1,12 @@
-import productClient from "../client";
-import { Product, updatePriceProduct } from "../types";
+import { UpdateProductSchema } from "Product/schemas/UpdateProductSchema";
+import peopleClient from "../client";
+import { Product } from "../types";
 
 const updateProduct = async (
-  body: updatePriceProduct,
+  body: UpdateProductSchema,
   productId: number
 ): Promise<Product> => {
-  const response = await productClient.patch<Product>(`/${productId}`, {
-    sellPrice: body.sellPrice,
-  });
+  const response = await peopleClient.patch<Product>(`/${productId}`, body);
 
   return response.data;
 };

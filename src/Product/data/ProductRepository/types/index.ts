@@ -12,7 +12,7 @@ export interface Product {
   id: number;
 }
 
-export interface updatePriceProduct {
+export interface updatePriceProductDto {
   sellPrice: number;
 }
 
@@ -32,13 +32,20 @@ export interface ProductPaginatedReturn {
 export interface ProductRepository {
   createProduct: (body: CreateProductSchema) => Promise<Product>;
   getAllProduct: () => Promise<Product[]>;
-  updateProduct: (
-    body: updatePriceProduct,
+  updatePriceProduct: (
+    body: updatePriceProductDto,
     productId: number
   ) => Promise<Product>;
   getAllProductPaginated: (
     page?: number,
     limit?: number,
-    query?: string
+    query?: string,
+    categoryId?: string
   ) => Promise<ProductPaginatedReturn>;
+  deleteProduct: (productId: number) => Promise<boolean>;
+  getProductById: (productId: number) => Promise<Product>;
+  updateProduct: (
+    body: UpdateProductSchema,
+    productId: number
+  ) => Promise<Product>;
 }

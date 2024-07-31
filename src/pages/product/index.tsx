@@ -4,12 +4,20 @@ import { useRouter } from "next/router";
 import PageLayout from "Base/layout/PageLayout";
 import ProductHeader from "Product/features/ProductHeader";
 import ProductList from "Product/features/ProductList";
+import { Product } from "Product/data/ProductRepository";
 
 const ProductPage = () => {
   const router = useRouter();
 
   const navigateToCreateProduct = useCallback(
     () => router.push("/product/create"),
+    [router]
+  );
+
+  const navigateToEdit = useCallback(
+    (product: Product) => {
+      router.push(`/product/edit/${product.id}`);
+    },
     [router]
   );
 
@@ -27,7 +35,7 @@ const ProductPage = () => {
             navigateToEditMultiProduct={navigateToEditMultiProduct}
           />
         ),
-        content: <ProductList />,
+        content: <ProductList navigateToEdit={navigateToEdit} />,
       }}
     </PageLayout>
   );
