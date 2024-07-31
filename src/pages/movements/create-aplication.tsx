@@ -41,11 +41,11 @@ const AplicationCreatePage = () => {
       >
         <PageLayout>
           {{
-            header: (
-              <Heading>{"Completar los datos para la aplicacion"}</Heading>
-            ),
+            header: <Heading>{""}</Heading>,
             content: (
-              <CreateAplicationMovement navigateToMovements={navigateToMovements} />
+              <CreateAplicationMovement
+                navigateToMovements={navigateToMovements}
+              />
             ),
           }}
         </PageLayout>

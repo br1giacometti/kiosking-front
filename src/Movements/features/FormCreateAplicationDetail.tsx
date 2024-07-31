@@ -40,7 +40,7 @@ const FormCreateAplicationDetail = ({ index }: FormCreateOwnerProps) => {
       >
         <FormSectionLayout
           minW={{ lg: "md" }}
-          title={`${"Seleccionar retiro"}`}
+          title={`${"Seleccionar rdasro"}`}
         >
           <Controller
             control={control}

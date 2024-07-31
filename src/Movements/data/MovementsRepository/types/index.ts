@@ -46,6 +46,12 @@ export interface MovementListItem {
   id: number;
 }
 
+export interface MovementListProductItem {
+  description: string;
+  sellPrice: number;
+  quantity: number;
+}
+
 export interface PaginationMeta {
   totalItems: number;
   itemCount: number;
