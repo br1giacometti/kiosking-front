@@ -5,15 +5,7 @@ import React, {
   useState,
   useEffect,
 } from "react";
-import {
-  ReactGrid,
-  Column,
-  Row,
-  CellChange,
-  DefaultCellTypes,
-} from "@silevis/reactgrid";
-import "@silevis/reactgrid/styles.css";
-import { Product, useAllProductService } from "Product/data/ProductRepository";
+import { Product } from "Product/data/ProductRepository";
 import useUpdateProductService from "Product/data/ProductRepository/hooks/useUpdateProductService";
 import {
   Box,
@@ -29,6 +21,7 @@ import styles from "./gridStyles.module.css";
 import useAllProductPaginated from "Product/data/ProductRepository/hooks/useAllProductPaginated";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import useCategoryOptions from "Product/hooks/useCategoryOptions";
+import DataTable, { BaseColumn } from "Base/components/DataTable";
 
 interface EditMultiProductProps {
   navigateToProduct: () => void;
@@ -51,68 +44,6 @@ const EditMultiProduct = ({ navigateToProduct }: EditMultiProductProps) => {
 
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
-
-  const getColumns = (): Column[] => [
-    { columnId: "Id", width: 10, resizable: true },
-    { columnId: "Nombre", width: 500, resizable: true },
-    { columnId: "Precio", width: 200, resizable: true },
-  ];
-
-  const headerRow: Row = {
-    rowId: "header",
-    cells: [
-      { type: "header", text: "Id" },
-      { type: "header", text: "Nombre" },
-      { type: "header", text: "Precio" },
-    ],
-  };
-
-  const getRows = (products: Product[]): Row[] => [
-    headerRow,
-    ...products.map<Row>((product) => ({
-      rowId: product.id.toString(),
-      cells: [
-        { type: "number", value: product.id },
-        { type: "text", text: product.description },
-        { type: "number", value: product.sellPrice },
-      ],
-    })),
-  ];
-
-  const rows = getRows(productList);
-  const columns = getColumns();
-
-  const handleChanges = async (changes: CellChange<DefaultCellTypes>[]) => {
-    for (const change of changes) {
-      if (change.type === "number" && change.columnId === "Precio") {
-        const rowId = Number(change.rowId);
-        const newPrice = change.newCell.value;
-
-        const productToUpdate = productList.find(
-          (product) => product.id === rowId
-        );
-
-        if (productToUpdate) {
-          try {
-            const updateBody = {
-              description: productToUpdate.description,
-              barCode: productToUpdate.barCode,
-              sellPrice: newPrice,
-              categoryId: productToUpdate.categoryId,
-            };
-
-            await updateProduct(updateBody, productToUpdate.id);
-
-            refetch();
-          } catch (error) {
-            console.error(`Error updating product with ID ${rowId}:`, error);
-          }
-        } else {
-          console.error(`Product with ID ${rowId} not found.`);
-        }
-      }
-    }
-  };
 
   const handleSearchChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const searchValue = e.target.value;
@@ -143,6 +74,48 @@ const EditMultiProduct = ({ navigateToProduct }: EditMultiProductProps) => {
     setQuery(combinedQuery);
   }, [searchQuery, selectedCategory, setQuery]);
 
+  const handlePriceChange = useCallback(
+    async (productId: number, value: number) => {
+      const productToUpdate = productList.find(
+        (product) => product.id === productId
+      );
+
+      if (productToUpdate) {
+        try {
+          const updateBody = {
+            description: productToUpdate.description,
+            barCode: productToUpdate.barCode,
+            sellPrice: value,
+            categoryId: productToUpdate.categoryId,
+          };
+
+          await updateProduct(updateBody, productToUpdate.id);
+          refetch();
+        } catch (error) {
+          console.error(`Error updating product with ID ${productId}:`, error);
+        }
+      } else {
+        console.error(`Product with ID ${productId} not found.`);
+      }
+    },
+    [productList, updateProduct, refetch]
+  );
+
+  const columns: BaseColumn<Product>[] = [
+    { label: "Id", selector: (row) => row.id },
+    { label: "Nombre", selector: (row) => row.description },
+    {
+      label: "Precio",
+      selector: (row) => (
+        <Input
+          type="number"
+          value={row.sellPrice || 0}
+          onChange={(e) => handlePriceChange(row.id, Number(e.target.value))}
+        />
+      ),
+    },
+  ];
+
   return (
     <FormSectionLayout>
       <Flex alignItems="center" justifyContent="space-between">
@@ -171,17 +144,9 @@ const EditMultiProduct = ({ navigateToProduct }: EditMultiProductProps) => {
           </Select>
         </Box>
       </Flex>
-      <Box p={100}>
+      <Box>
         <div className={styles.fullWidthGrid}>
-          <div className={styles.rgFlagCell}>
-            <div className={styles.rgFlagWrapper}>
-              <ReactGrid
-                rows={rows}
-                columns={columns}
-                onCellsChanged={handleChanges}
-              />
-            </div>
-          </div>
+          <DataTable columns={columns} data={productList} />
         </div>
       </Box>
     </FormSectionLayout>

@@ -19,7 +19,6 @@ const AplicationCreatePage = () => {
     defaultValues: {
       movementType: "APLICATION",
       stockMovementDetail: [],
-      warehouseOriginId: {},
     },
   });
 
