@@ -14,7 +14,7 @@ export const productOptionItem = z.object({
 export const StockMovementDetailSchema = z.object({
   product: productOptionItem,
   quantity: z.number(),
-  buyPrice: z.number().optional(),
+  sellPrice: z.number().optional(),
   description: z.string().min(1, { message: "Required" }),
   value: z.string().transform((val, ctx) => {
     const parsed = Number.parseInt(val.replaceAll(".", ""), 10);

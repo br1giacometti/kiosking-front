@@ -15,7 +15,7 @@ const FormAddProductsDetails = () => {
   const addNewProductDetail = useCallback(() => {
     append({
       productId: 0,
-      buyPrice: 0,
+      sellPrice: 0,
       quantity: 0,
     });
   }, [append]);

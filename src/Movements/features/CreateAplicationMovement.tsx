@@ -1,5 +1,3 @@
-// CreateAplicationMovement.tsx
-
 import { useEffect, useState } from "react";
 import { Controller, FieldErrors, useFormContext } from "react-hook-form";
 import { Button, useDisclosure, useToast } from "@chakra-ui/react";
@@ -13,6 +11,7 @@ import ConfirmCreateModal from "Movements/components/ConfirmCreateDialog";
 import FormCreateAplicationDetails from "./FormCreateAplicationDetails";
 import { CreateAplicationSchema } from "Movements/schemas/CreateAplicationSchema";
 import LastMovementsList from "./LastMovementsList";
+import useLastMovements from "Movements/data/MovementsRepository/hooks/useLastMovements";
 
 interface CreateMovementsProps {
   navigateToMovements: () => void;
@@ -35,6 +34,8 @@ const CreateAplicationMovement = ({
   const { loading, error, startFetch, successFetch, failureFetch } =
     useCreateMovementsStates();
   const { isOpen, onClose, onOpen } = useDisclosure({ defaultIsOpen: false });
+
+  const { invalidateCache } = useLastMovements(); // Hook para invalidar la caché
 
   // Estado para el monto total
   const [totalAmount, setTotalAmount] = useState<number>(0);
@@ -67,6 +68,7 @@ const CreateAplicationMovement = ({
           description: "Creado correctamente",
         });
         onClose();
+        invalidateCache(); // Invalida la caché para actualizar la lista de movimientos
       })
       .catch((e) => {
         const errorMessage = e.response.data.message;
@@ -108,7 +110,7 @@ const CreateAplicationMovement = ({
           onConfirm={handleSubmit(handleCreateMovements, handleSubmitError)}
         />
       </FormContainerLayout>
-      <LastMovementsList></LastMovementsList>
+      <LastMovementsList />
     </FormPageLayout>
   );
 };

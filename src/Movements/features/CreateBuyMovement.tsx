@@ -52,7 +52,7 @@ const CreateBuyMovement = ({ navigateToMovements }: CreateMovementsProps) => {
       stockMovementDetail: data.stockMovementDetail.map((product) => ({
         productId: product.product.productId,
         quantity: product.quantity,
-        buyPrice: product.buyPrice,
+        sellPrice: product.sellPrice,
       })),
       date: new Date(),
       description: data.description,

@@ -9,7 +9,7 @@ export const optionItem = z.object({
 export const productMovementsDetail = z.object({
   productId: z.number(),
   quantity: z.number(),
-  buyPrice: z.number(),
+  sellPrice: z.number(),
 });
 
 const createMovementsSchema = z.object({

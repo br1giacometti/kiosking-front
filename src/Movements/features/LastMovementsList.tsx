@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import {
   Badge,
   Box,
@@ -7,25 +7,25 @@ import {
   Tooltip,
   useToast,
 } from "@chakra-ui/react";
-
-import getMovementTypeColor from "Movements/utils/getMovementTypeColor";
 import { useTranslation } from "Base/i18n";
-import {
-  MovementListItem,
-  useAllMovements,
-} from "Movements/data/MovementsRepository";
-import DataTable, { BaseColumn } from "Base/components/DataTable";
-import formatDate from "Base/utils/formatters/formatDate";
-import formatPrice from "Base/utils/formatters/formatPrice";
 import { EditIcon } from "@chakra-ui/icons";
 import { PrinterIcon } from "@heroicons/react/24/outline";
 import formatDatetime from "Base/utils/formatters/formatDatetime";
+import formatPrice from "Base/utils/formatters/formatPrice";
+import DataTable, { BaseColumn } from "Base/components/DataTable";
 import useLastMovements from "Movements/data/MovementsRepository/hooks/useLastMovements";
+import { MovementListItem } from "Movements/data/MovementsRepository";
 
 const LastMovementsList = () => {
   const toast = useToast();
   const { t } = useTranslation("movements");
   const { error, loading, movementsList } = useLastMovements();
+
+  useEffect(() => {
+    if (error) {
+      toast({ status: "error", description: error });
+    }
+  }, [error, toast]);
 
   const columns: BaseColumn<MovementListItem>[] = useMemo(
     () => [
@@ -60,18 +60,10 @@ const LastMovementsList = () => {
     [t]
   );
 
-  useEffect(() => {
-    if (error) {
-      toast({ status: "error", description: error });
-    }
-  }, [error, toast]);
-
   return (
-    <>
-      <Box px={{ base: 3, md: 6 }}>
-        <DataTable columns={columns} data={movementsList} loading={loading} />
-      </Box>
-    </>
+    <Box px={{ base: 3, md: 6 }}>
+      <DataTable columns={columns} data={movementsList} loading={loading} />
+    </Box>
   );
 };
 

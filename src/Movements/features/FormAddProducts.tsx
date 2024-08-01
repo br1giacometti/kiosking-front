@@ -49,18 +49,18 @@ const FormAddProducts = ({ index }: FormCreateOwnerProps) => {
             control={control}
             errorMessage={
               errors.stockMovementDetail &&
-              errors.stockMovementDetail[index]?.buyPrice
+              errors.stockMovementDetail[index]?.sellPrice
                 ? (t(
-                    `errors.${errors.stockMovementDetail[index]?.buyPrice?.message}`,
+                    `errors.${errors.stockMovementDetail[index]?.sellPrice?.message}`,
                     {
                       ns: "common",
                     }
                   ) as string)
                 : undefined
             }
-            id={`buyPrice-${index}`} // Añade el índice al id para que sea único
-            label={"Precio de compra"}
-            name={`stockMovementDetail.${index}.buyPrice`} // Usa el índice en el name
+            id={`sellPrice-${index}`} // Añade el índice al id para que sea único
+            label={"Precio de venta"}
+            name={`stockMovementDetail.${index}.sellPrice`} // Usa el índice en el name
           />
 
           <FormInputNumber

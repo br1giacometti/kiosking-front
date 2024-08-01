@@ -15,7 +15,7 @@ const FormCreateBuyDetails = () => {
     append({
       product: null as any,
       quantity: 0,
-      buyPrice: 0,
+      sellPrice: 0,
       value: 0,
       description: "",
     });
