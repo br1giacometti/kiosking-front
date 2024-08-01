@@ -38,7 +38,6 @@ const ProductList = ({ navigateToEdit }: ProductListProps) => {
 
   const {
     error,
-    invalidateCache,
     loading,
     meta,
     productList,
@@ -75,7 +74,6 @@ const ProductList = ({ navigateToEdit }: ProductListProps) => {
               status: "success",
               isClosable: true,
             });
-            invalidateCache();
           }
         })
         .catch(() => {
@@ -93,7 +91,7 @@ const ProductList = ({ navigateToEdit }: ProductListProps) => {
           onClose();
         });
     }
-  }, [deletePerson, deleteState.selected, invalidateCache, onClose, toast]);
+  }, [deletePerson, deleteState.selected, onClose, toast]);
 
   const columns: BaseColumn<Product>[] = useMemo(
     () => [

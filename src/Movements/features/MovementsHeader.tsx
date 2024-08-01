@@ -22,22 +22,15 @@ const MovementsHeader = ({
       px={6}
       spacing={{ base: 6, lg: 0 }}
     >
-      <Heading>{t("sidebar.menu.movements", { ns: "appLayout" })}</Heading>
+      <Heading>{t("Ventas", { ns: "appLayout" })}</Heading>
       <Stack direction={{ base: "column", md: "row" }}>
-        <Button
-          leftIcon={<Icon as={PlusIcon} />}
-          variant="outline"
-          onClick={navigateToCreateBuyMovement}
-        >
-          {"Comprar productos"}
-        </Button>
         <Button
           leftIcon={<Icon as={PlusIcon} />}
           mr="2"
           variant="outline"
           onClick={navigateToCreateAplication}
         >
-          {"Generar aplicacion"}
+          {"Punto de Venta"}
         </Button>
       </Stack>
     </Stack>

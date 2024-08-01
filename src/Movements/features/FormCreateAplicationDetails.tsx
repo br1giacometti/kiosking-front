@@ -1,5 +1,3 @@
-// FormCreateAplicationDetails.tsx
-
 import {
   Box,
   Button,
@@ -139,13 +137,13 @@ const FormCreateAplicationDetails = ({
 
   const columns: BaseColumn<StockMovementDetailWithId>[] = useMemo(
     () => [
-      { label: "Product", selector: (row) => row.product.description },
+      { label: "Producto", selector: (row) => row.product.description },
       {
-        label: "Price",
+        label: "Precio",
         selector: (row) => row.product.sellPrice,
       },
       {
-        label: "Qty",
+        label: "Cantidad",
         selector: (row) => (
           <Input
             type="number"
@@ -165,7 +163,7 @@ const FormCreateAplicationDetails = ({
           formatPrice((row.product.sellPrice || 0) * (row.quantity || 0)),
       },
       {
-        label: "Actions",
+        label: "Acciones",
         selector: (row) => (
           <Flex gap={2}>
             <Button
@@ -206,11 +204,11 @@ const FormCreateAplicationDetails = ({
         <VStack spacing={4} flex="1">
           <InputGroup mb={4}>
             <Input
-              placeholder="Enter Product Id, Barcode or Description"
+              placeholder="Buscar producto por nombre o codigo de barra"
               variant="outline"
               value={searchTerm}
               onChange={handleSearchChange}
-              onKeyPress={handleSearchKeyPress}
+              onKeyDown={handleSearchKeyPress} // Use onKeyDown to handle Enter key
             />
             <InputRightElement>
               <Icon as={MagnifyingGlassIcon} />

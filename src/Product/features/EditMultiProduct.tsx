@@ -17,6 +17,7 @@ import {
   Select,
   Button,
   useToast,
+  useDisclosure,
 } from "@chakra-ui/react";
 import FormSectionLayout from "Base/layout/FormSectionLayout";
 import styles from "./gridStyles.module.css";
@@ -24,6 +25,7 @@ import useAllProductPaginated from "Product/data/ProductRepository/hooks/useAllP
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import useCategoryOptions from "Product/hooks/useCategoryOptions";
 import DataTable, { BaseColumn } from "Base/components/DataTable";
+import ConfirmCreateModal from "Product/components/ConfirmCreateDialog";
 
 interface EditMultiProductProps {
   navigateToProduct: () => void;
@@ -34,7 +36,6 @@ const EditMultiProduct = ({ navigateToProduct }: EditMultiProductProps) => {
   const { updateProduct } = useUpdateProductService();
   const {
     error,
-    invalidateCache,
     loading,
     meta,
     productList,
@@ -44,12 +45,15 @@ const EditMultiProduct = ({ navigateToProduct }: EditMultiProductProps) => {
     refetch,
   } = useAllProductPaginated();
   const { options, loading: loading2 } = useCategoryOptions();
+  const { isOpen, onClose, onOpen } = useDisclosure({ defaultIsOpen: false });
 
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [editedPrices, setEditedPrices] = useState<Map<number, number>>(
     new Map()
   );
+  const [localProductList, setLocalProductList] =
+    useState<Product[]>(productList);
 
   const handleSearchChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const searchValue = e.target.value;
@@ -79,6 +83,11 @@ const EditMultiProduct = ({ navigateToProduct }: EditMultiProductProps) => {
     setQuery(combinedQuery);
   }, [searchQuery, selectedCategory, setQuery]);
 
+  useEffect(() => {
+    // Update local product list when productList changes
+    setLocalProductList(productList);
+  }, [productList]);
+
   const handlePriceChange = useCallback((productId: number, value: number) => {
     setEditedPrices((prevPrices) => new Map(prevPrices).set(productId, value));
   }, []);
@@ -86,7 +95,7 @@ const EditMultiProduct = ({ navigateToProduct }: EditMultiProductProps) => {
   const handleUpdatePrices = useCallback(async () => {
     try {
       for (const [productId, newPrice] of editedPrices.entries()) {
-        const productToUpdate = productList.find(
+        const productToUpdate = localProductList.find(
           (product) => product.id === productId
         );
 
@@ -103,9 +112,14 @@ const EditMultiProduct = ({ navigateToProduct }: EditMultiProductProps) => {
           console.error(`Product with ID ${productId} not found.`);
         }
       }
-      refetch();
+
       setEditedPrices(new Map()); // Clear edited prices after update
+      // Optionally update localProductList here if needed
+      // setLocalProductList(newProductList);
+      refetch();
+
       // Mostrar toast de éxito
+      onClose();
       toast({
         title: "Precios actualizados.",
         description:
@@ -127,7 +141,7 @@ const EditMultiProduct = ({ navigateToProduct }: EditMultiProductProps) => {
         isClosable: true,
       });
     }
-  }, [editedPrices, productList, updateProduct, refetch, toast]);
+  }, [editedPrices, localProductList, updateProduct, toast, refetch]);
 
   const columns: BaseColumn<Product>[] = [
     { label: "Id", selector: (row) => row.id },
@@ -174,17 +188,21 @@ const EditMultiProduct = ({ navigateToProduct }: EditMultiProductProps) => {
       </Flex>
       <Box>
         <div className={styles.fullWidthGrid}>
-          <DataTable columns={columns} data={productList} />
+          <DataTable columns={columns} data={localProductList} />
         </div>
       </Box>
       <Box>
-        <Button
-          colorScheme="main"
-          isLoading={loading}
-          onClick={handleUpdatePrices}
-        >
-          Actualizar Precios
+        <Button colorScheme="main" isLoading={loading} onClick={onOpen}>
+          Confirmar aplicación
         </Button>
+        <ConfirmCreateModal
+          description="confirm button"
+          isLoading={loading}
+          isOpen={isOpen}
+          title="Confirmar"
+          onClose={onClose}
+          onConfirm={handleUpdatePrices}
+        />
       </Box>
     </FormSectionLayout>
   );
