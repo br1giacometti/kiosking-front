@@ -63,4 +63,5 @@ export interface PaginationMeta {
 export interface MovementsRepository {
   createBuyMovements: (body: CreateMovementDto) => Promise<Movements>;
   getAllMovements: () => Promise<MovementListItem[]>;
+  getLastMovements: () => Promise<MovementListItem[]>;
 }

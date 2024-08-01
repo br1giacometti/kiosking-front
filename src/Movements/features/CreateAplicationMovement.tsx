@@ -12,6 +12,7 @@ import FormSectionLayout from "Base/layout/FormSectionLayout";
 import ConfirmCreateModal from "Movements/components/ConfirmCreateDialog";
 import FormCreateAplicationDetails from "./FormCreateAplicationDetails";
 import { CreateAplicationSchema } from "Movements/schemas/CreateAplicationSchema";
+import LastMovementsList from "./LastMovementsList";
 
 interface CreateMovementsProps {
   navigateToMovements: () => void;
@@ -107,6 +108,7 @@ const CreateAplicationMovement = ({
           onConfirm={handleSubmit(handleCreateMovements, handleSubmitError)}
         />
       </FormContainerLayout>
+      <LastMovementsList></LastMovementsList>
     </FormPageLayout>
   );
 };
