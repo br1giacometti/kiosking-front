@@ -28,7 +28,7 @@ interface StockMovementDetailWithId extends StockMovementDetail {
 }
 
 interface FormCreateAplicationDetailsProps {
-  onTotalAmountChange: (amount: number) => void; // New prop
+  onTotalAmountChange: (amount: number) => void;
 }
 
 const FormCreateAplicationDetails = ({
@@ -98,6 +98,13 @@ const FormCreateAplicationDetails = ({
     [fields, update]
   );
 
+  const handlePriceChange = useCallback(
+    (index: number, value: number) => {
+      update(index, { ...fields[index], sellPrice: value });
+    },
+    [fields, update]
+  );
+
   const handleDeleteProduct = useCallback(
     (index: number) => {
       remove(index);
@@ -132,7 +139,7 @@ const FormCreateAplicationDetails = ({
   );
 
   useEffect(() => {
-    onTotalAmountChange(totalAmount); // Call the prop function when totalAmount changes
+    onTotalAmountChange(totalAmount);
   }, [totalAmount, onTotalAmountChange]);
 
   const columns: BaseColumn<StockMovementDetailWithId>[] = useMemo(
@@ -140,14 +147,25 @@ const FormCreateAplicationDetails = ({
       { label: "Producto", selector: (row) => row.product.description },
       {
         label: "Precio",
-        selector: (row) => row.product.sellPrice,
+        selector: (row) => (
+          <Input
+            type="number"
+            value={row.sellPrice ?? ""}
+            onChange={(e) =>
+              handlePriceChange(
+                fields.findIndex((item) => item.id === row.id),
+                Number(e.target.value)
+              )
+            }
+          />
+        ),
       },
       {
         label: "Cantidad",
         selector: (row) => (
           <Input
             type="number"
-            value={row.quantity}
+            value={row.quantity ?? ""}
             onChange={(e) =>
               handleQuantityChange(
                 fields.findIndex((item) => item.id === row.id),
@@ -160,7 +178,7 @@ const FormCreateAplicationDetails = ({
       {
         label: "Total",
         selector: (row) =>
-          formatPrice((row.product.sellPrice || 0) * (row.quantity || 0)),
+          formatPrice((row.sellPrice || 0) * (row.quantity || 0)),
       },
       {
         label: "Acciones",
@@ -182,7 +200,7 @@ const FormCreateAplicationDetails = ({
         ),
       },
     ],
-    [fields, handleQuantityChange, handleDeleteProduct]
+    [fields, handleQuantityChange, handlePriceChange, handleDeleteProduct]
   );
 
   return (
@@ -204,11 +222,11 @@ const FormCreateAplicationDetails = ({
         <VStack spacing={4} flex="1">
           <InputGroup mb={4}>
             <Input
-              placeholder="Buscar producto por nombre o codigo de barra"
+              placeholder="Buscar producto por nombre o código de barra"
               variant="outline"
               value={searchTerm}
               onChange={handleSearchChange}
-              onKeyDown={handleSearchKeyPress} // Use onKeyDown to handle Enter key
+              onKeyDown={handleSearchKeyPress}
             />
             <InputRightElement>
               <Icon as={MagnifyingGlassIcon} />
