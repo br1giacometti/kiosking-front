@@ -1,3 +1,5 @@
+// FormCreateAplicationDetails.tsx
+
 import {
   Box,
   Button,
@@ -10,31 +12,35 @@ import {
   InputGroup,
   InputRightElement,
 } from "@chakra-ui/react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useEffect } from "react";
 import {
   HomeModernIcon,
   MagnifyingGlassIcon,
   TrashIcon,
-} from "@heroicons/react/24/outline"; // Importa el ícono de la papelera
+} from "@heroicons/react/24/outline";
 import DataTable, { BaseColumn } from "Base/components/DataTable";
 import useCreateAplicationContext from "Movements/contexts/CreateBuyContext/hooks/useCreateAplicationContext";
 import useProductsOptions from "Movements/hooks/useProductsOptions";
 import OptionItem from "Base/types/OptionItem";
-import { MovementListProductItem } from "Movements/data/MovementsRepository";
 import formatPrice from "Base/utils/formatters/formatPrice";
+import { StockMovementDetail } from "Movements/schemas/CreateAplicationSchema";
 
-interface Field {
-  sellPrice: number;
-  quantity: number;
-  description: string;
+interface StockMovementDetailWithId extends StockMovementDetail {
+  id: string;
 }
 
-const FormCreateAplicationDetails = () => {
+interface FormCreateAplicationDetailsProps {
+  onTotalAmountChange: (amount: number) => void; // New prop
+}
+
+const FormCreateAplicationDetails = ({
+  onTotalAmountChange,
+}: FormCreateAplicationDetailsProps) => {
   const {
     stockMovementDetail: { fields, append, update, remove },
   } = useCreateAplicationContext();
 
-  const { options, loading } = useProductsOptions();
+  const { options } = useProductsOptions();
 
   type ProductOption = OptionItem<number> & {
     barCode: string;
@@ -127,12 +133,16 @@ const FormCreateAplicationDetails = () => {
     [fields]
   );
 
-  const columns: BaseColumn<MovementListProductItem>[] = useMemo(
+  useEffect(() => {
+    onTotalAmountChange(totalAmount); // Call the prop function when totalAmount changes
+  }, [totalAmount, onTotalAmountChange]);
+
+  const columns: BaseColumn<StockMovementDetailWithId>[] = useMemo(
     () => [
-      { label: "Product", selector: (row) => row.description },
+      { label: "Product", selector: (row) => row.product.description },
       {
         label: "Price",
-        selector: (row) => row.sellPrice,
+        selector: (row) => row.product.sellPrice,
       },
       {
         label: "Qty",
@@ -141,21 +151,29 @@ const FormCreateAplicationDetails = () => {
             type="number"
             value={row.quantity}
             onChange={(e) =>
-              handleQuantityChange(fields.indexOf(row), Number(e.target.value))
+              handleQuantityChange(
+                fields.findIndex((item) => item.id === row.id),
+                Number(e.target.value)
+              )
             }
           />
         ),
       },
       {
         label: "Total",
-        selector: (row) => formatPrice(row.sellPrice * row.quantity),
+        selector: (row) =>
+          formatPrice((row.product.sellPrice || 0) * (row.quantity || 0)),
       },
       {
         label: "Actions",
         selector: (row) => (
           <Flex gap={2}>
             <Button
-              onClick={() => handleDeleteProduct(fields.indexOf(row))}
+              onClick={() =>
+                handleDeleteProduct(
+                  fields.findIndex((item) => item.id === row.id)
+                )
+              }
               variant="outline"
               colorScheme="red"
               size="sm"

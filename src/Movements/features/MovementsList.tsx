@@ -9,6 +9,7 @@ import {
 } from "Movements/data/MovementsRepository";
 import DataTable, { BaseColumn } from "Base/components/DataTable";
 import formatDate from "Base/utils/formatters/formatDate";
+import formatPrice from "Base/utils/formatters/formatPrice";
 
 interface MovementsListProps {
   navigateToDetails: (movementId: number) => void;
@@ -34,7 +35,7 @@ const MovementsList = ({ navigateToDetails }: MovementsListProps) => {
       },
       {
         label: "Valor",
-        selector: (row) => row.value,
+        selector: (row) => formatPrice(row.value),
       },
       {
         label: "Fecha",
