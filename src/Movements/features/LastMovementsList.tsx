@@ -42,7 +42,7 @@ const LastMovementsList = () => {
         selector: (row) => (
           <>
             <Flex gap={2}>
-              <Tooltip label={t("Editar")} placement="bottom">
+              <Tooltip label={t("Imprimir")} placement="bottom">
                 <IconButton
                   aria-label="Edit icon"
                   colorScheme="gray"
