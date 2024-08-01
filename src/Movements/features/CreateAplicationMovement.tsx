@@ -51,7 +51,7 @@ const CreateAplicationMovement = ({
       stockMovementDetail: data.stockMovementDetail.map((product) => ({
         productId: product.product.productId,
         quantity: product.quantity,
-        buyPrice: product.sellPrice,
+        sellPrice: product.sellPrice,
       })),
       date: new Date(),
       description: "Hardcoded description", // Hardcoded value

@@ -1,6 +1,7 @@
 import { Aplicator } from "Aplicator/data/AplicatorRepository";
 import { User } from "Auth/types";
 import { Batch } from "Field/data/FieldRepository";
+import { Product } from "Product/data/ProductRepository";
 import { Warehouse } from "Warehouse/data/WarehouseRepository";
 
 export interface StockMovementsDetail {
@@ -36,6 +37,37 @@ export interface Movements {
   id: number;
 }
 
+interface ViewStockMovementsDetail {
+  description: string;
+  quantity: number;
+  product: {
+    productId: number;
+    description: string;
+    quantity: number;
+    sellPrice?: number;
+  };
+  sellPrice?: number;
+}
+
+interface StockMovementDetail {
+  quantity: number;
+  product: {
+    productId: number;
+    description: string;
+    sellPrice?: number;
+  };
+  sellPrice?: number;
+}
+
+export interface ViewMovements {
+  description: string;
+  value: number;
+  movementType: string;
+  date: Date;
+  stockMovementDetail: StockMovementDetail[];
+  id: number;
+}
+
 export interface MovementListItem {
   description: string;
   value: number;
@@ -60,8 +92,28 @@ export interface PaginationMeta {
   currentPage: number;
 }
 
+export type ProductDetail = {
+  productId: number;
+  description: string;
+  sellPrice?: number;
+};
+
+export type StockMovementDetail2 = {
+  product: ProductDetail;
+  quantity: number;
+  sellPrice?: number;
+};
+
+export interface ViewMovements2 {
+  movementType: string;
+  date: Date;
+  value: number;
+  stockMovementDetail: StockMovementDetail[];
+}
+
 export interface MovementsRepository {
   createBuyMovements: (body: CreateMovementDto) => Promise<Movements>;
   getAllMovements: () => Promise<MovementListItem[]>;
   getLastMovements: () => Promise<MovementListItem[]>;
+  getMovementById: (movementId: number) => Promise<Movements>;
 }

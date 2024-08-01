@@ -3,6 +3,7 @@ import { MovementsRepository } from "./types";
 import createBuyMovements from "./services/createBuyMovements";
 import getAllMovements from "./services/getAllMovements";
 import getLastMovements from "./services/getLastMovements";
+import getMovementById from "./services/getMovementById";
 
 const createMovementsRepository = (userToken: string): MovementsRepository => {
   movementsClient.defaults.headers.common = {
@@ -13,6 +14,7 @@ const createMovementsRepository = (userToken: string): MovementsRepository => {
     createBuyMovements,
     getAllMovements,
     getLastMovements,
+    getMovementById,
   };
 };
 
