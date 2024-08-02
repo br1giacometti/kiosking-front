@@ -44,9 +44,6 @@ const ConfirmCreateModal = ({
           <AlertDialogBody>{description}</AlertDialogBody>
 
           <AlertDialogFooter>
-            <Button ref={cancelRef} onClick={onClose}>
-              {"Cancelar"}
-            </Button>
             <Button
               ref={confirmRef} // Add ref here
               colorScheme="main"
@@ -55,6 +52,9 @@ const ConfirmCreateModal = ({
               onClick={onConfirm}
             >
               {"Confirmar"}
+            </Button>
+            <Button ref={cancelRef} onClick={onClose}>
+              {"Cancelar"}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

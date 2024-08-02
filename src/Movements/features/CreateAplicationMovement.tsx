@@ -158,13 +158,13 @@ const CreateAplicationMovement = ({
         </FormSectionLayout>
 
         <Button colorScheme="main" isLoading={loading} onClick={onOpen}>
-          Confirmar aplicación
+          Confirmar Venta
         </Button>
         <ConfirmCreateModal
-          description="confirm button"
+          description="Esta seguro de confirmar la venta?"
           isLoading={loading}
           isOpen={isOpen}
-          title="Confirmar"
+          title="Realizar venta"
           onClose={onClose}
           onConfirm={handleSubmit(handleCreateMovements, handleSubmitError)}
         />

@@ -36,16 +36,6 @@ const AppLayout = ({ children }: PropsWithChildren) => {
       icon: Square3Stack3DIcon,
     },
     {
-      title: t("sidebar.menu.field"),
-      path: "/field",
-      icon: Square3Stack3DIcon,
-    },
-    {
-      title: t("sidebar.menu.aplicator"),
-      path: "/aplicator",
-      icon: UsersIcon,
-    },
-    {
       title: t("sidebar.menu.warehouse"),
       path: "/warehouse",
       icon: BriefcaseIcon,
