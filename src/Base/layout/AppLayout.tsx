@@ -2,11 +2,12 @@ import { PropsWithChildren } from "react";
 import { Box, Flex, Stack } from "@chakra-ui/react";
 
 import {
-  HomeModernIcon,
-  RectangleStackIcon,
-  Square3Stack3DIcon,
-  UsersIcon,
   BriefcaseIcon,
+  HomeIcon,
+  CubeIcon,
+  ArchiveBoxIcon,
+  ClipboardDocumentListIcon,
+  CogIcon,
 } from "@heroicons/react/24/outline";
 
 import { SidebarProvider } from "Base/contexts/SidebarContext";
@@ -23,26 +24,31 @@ const AppLayout = ({ children }: PropsWithChildren) => {
     {
       title: t("sidebar.menu.home"),
       path: "/",
-      icon: HomeModernIcon,
+      icon: HomeIcon,
     },
     {
       title: t("sidebar.menu.product"),
       path: "/product",
-      icon: RectangleStackIcon,
+      icon: CubeIcon,
     },
     {
       title: t("Categorias"),
       path: "/category",
-      icon: Square3Stack3DIcon,
-    },
-    {
-      title: t("sidebar.menu.warehouse"),
-      path: "/warehouse",
-      icon: BriefcaseIcon,
+      icon: ArchiveBoxIcon,
     },
     {
       title: t("sidebar.menu.movements"),
       path: "/movements",
+      icon: ClipboardDocumentListIcon,
+    },
+    {
+      title: t("Configuracion"),
+      path: "/stockparameters",
+      icon: CogIcon,
+    },
+    {
+      title: t("sidebar.menu.warehouse"),
+      path: "/warehouse",
       icon: BriefcaseIcon,
     },
   ];
