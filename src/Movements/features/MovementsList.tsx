@@ -23,9 +23,13 @@ import formatDatetime from "Base/utils/formatters/formatDatetime";
 
 interface MovementsListProps {
   navigateToDetails: (movementId: number) => void;
+  navigateToPrint: (factureLink: string) => void;
 }
 
-const MovementsList = ({ navigateToDetails }: MovementsListProps) => {
+const MovementsList = ({
+  navigateToDetails,
+  navigateToPrint,
+}: MovementsListProps) => {
   const toast = useToast();
   const { t } = useTranslation("movements");
   const { error, loading, movementsList } = useAllMovements();
@@ -39,25 +43,6 @@ const MovementsList = ({ navigateToDetails }: MovementsListProps) => {
       {
         label: "Valor",
         selector: (row) => formatPrice(row.value),
-      },
-      {
-        label: t("Acciones"),
-        selector: (row) => (
-          <>
-            <Flex gap={2}>
-              <Tooltip label={t("Editar")} placement="bottom">
-                <IconButton
-                  aria-label="Edit icon"
-                  colorScheme="gray"
-                  icon={<PrinterIcon />}
-                  size="sm"
-                  variant="outline"
-                  // onClick={() => navigateToEdit(row)}
-                />
-              </Tooltip>
-            </Flex>
-          </>
-        ),
       },
     ],
     [t]

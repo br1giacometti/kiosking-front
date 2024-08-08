@@ -86,6 +86,7 @@ const FormCreateAplicationDetails = ({
         quantity: 1,
         sellPrice: product.sellPrice,
         description: product.label,
+        wasFactued: true,
       });
     },
     [append]

@@ -22,15 +22,14 @@ const AplicationCreatePage = () => {
     },
   });
 
-  const navigateToMovements = useCallback(
-    () => router.push("/movements"),
-    [router]
-  );
-
   const stockMovementsArrayMethods = useFieldArray({
     control: methods.control, // control props comes from useForm (optional: if you are using FormContext)
     name: "stockMovementDetail", // unique name for your Field Array
   });
+
+  const navigateToPrint = (factureLink: string) => {
+    window.open(factureLink, "_blank"); // Abre el link en una nueva pestaña
+  };
 
   return (
     <FormProvider {...methods}>
@@ -42,9 +41,7 @@ const AplicationCreatePage = () => {
           {{
             header: <Heading>{""}</Heading>,
             content: (
-              <CreateAplicationMovement
-                navigateToMovements={navigateToMovements}
-              />
+              <CreateAplicationMovement navigateToPrint={navigateToPrint} />
             ),
           }}
         </PageLayout>

@@ -13,6 +13,7 @@ export const productMovementsDetail = z.object({
 });
 
 const createMovementsSchema = z.object({
+  wasFactured: z.boolean(),
   description: z.string(),
   value: z.string().transform((val, ctx) => {
     const parsed = Number.parseInt(val.replaceAll(".", ""), 10);

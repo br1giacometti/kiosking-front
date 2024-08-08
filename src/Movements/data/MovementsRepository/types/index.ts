@@ -21,9 +21,27 @@ export interface CreateMovementDto {
   warehouseDestinyId?: number;
   batchId?: number;
   aplicatorId?: number;
+  wasFactured: Boolean;
+  linkFacture?: string;
 }
 
 export interface Movements {
+  description: string;
+  value: number;
+  // user: User;
+  MovementType: string;
+  date: Date;
+  stockMovementDetail: StockMovementDetail[];
+  warehouseOrigin?: Warehouse;
+  warehouseDestiny?: Warehouse;
+  aplicator?: Aplicator;
+  batch?: Batch;
+  id: number;
+  wasFactured: Boolean;
+  linkFacture: string;
+}
+
+export interface MovementsDto {
   description: string;
   value: number;
   // user: User;
@@ -35,6 +53,8 @@ export interface Movements {
   aplicator?: Aplicator;
   batch?: Batch;
   id: number;
+  wasFactured: Boolean;
+  factureLink: string;
 }
 
 interface ViewStockMovementsDetail {
@@ -51,12 +71,14 @@ interface ViewStockMovementsDetail {
 
 interface StockMovementDetail {
   quantity: number;
+  productId: number;
   product: {
     productId: number;
     description: string;
     sellPrice?: number;
   };
   sellPrice?: number;
+  factureLink: string;
 }
 
 export interface ViewMovements {
@@ -66,6 +88,7 @@ export interface ViewMovements {
   date: Date;
   stockMovementDetail: StockMovementDetail[];
   id: number;
+  factureLink: string;
 }
 
 export interface MovementListItem {
@@ -76,6 +99,7 @@ export interface MovementListItem {
   createdAt: Date;
   warehouseDestiny: string;
   id: number;
+  factureLink: string;
 }
 
 export interface MovementListProductItem {
@@ -104,11 +128,26 @@ export type StockMovementDetail2 = {
   sellPrice?: number;
 };
 
+export interface StockMovementsDetail {
+  productId: number;
+  quantity: number;
+  buyPrice?: number;
+}
+
 export interface ViewMovements2 {
-  movementType: string;
+  movementType?: string;
   date: Date;
   value: number;
   stockMovementDetail: StockMovementDetail[];
+  linkFacture: string;
+  description: string;
+  MovementType: string;
+  warehouseOrigin?: Warehouse;
+  warehouseDestiny?: Warehouse;
+  aplicator?: Aplicator;
+  batch?: Batch;
+  id: number;
+  wasFactured: Boolean;
 }
 
 export interface MovementsRepository {
@@ -116,4 +155,8 @@ export interface MovementsRepository {
   getAllMovements: () => Promise<MovementListItem[]>;
   getLastMovements: () => Promise<MovementListItem[]>;
   getMovementById: (movementId: number) => Promise<Movements>;
+  updateStockMovement: (
+    body: Movements,
+    movementId: number
+  ) => Promise<Movements>;
 }

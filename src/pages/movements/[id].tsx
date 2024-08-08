@@ -2,15 +2,26 @@ import { Heading } from "@chakra-ui/react";
 import { withAuth } from "@kushitech/auth-module";
 import { User } from "Auth/types";
 import PageLayout from "Base/layout/PageLayout";
-import { ViewMovements } from "Movements/data/MovementsRepository";
+import {
+  CreateMovementDto,
+  Movements,
+  MovementsDto,
+  ViewMovements,
+} from "Movements/data/MovementsRepository";
 import createMovementsRepository from "Movements/data/MovementsRepository/createMovementsRepository";
 import MovementDetails from "Movements/features/MovementDetails";
 
 interface MovementDetailsPageProps {
-  movement: ViewMovements | null;
+  movement: Movements | null;
+  movementsDto: MovementsDto;
+  navigateToPrint: (factureLink: string) => void;
 }
 
-const MovementDetailsPage = ({ movement }: MovementDetailsPageProps) => {
+const MovementDetailsPage = ({
+  movement,
+  navigateToPrint,
+  movementsDto,
+}: MovementDetailsPageProps) => {
   return (
     <PageLayout>
       {{
@@ -18,7 +29,13 @@ const MovementDetailsPage = ({ movement }: MovementDetailsPageProps) => {
           movement !== null ? (
             <Heading>{"Detalle movimiento: " + movement.description}</Heading>
           ) : null,
-        content: <MovementDetails movement={movement} />,
+        content: (
+          <MovementDetails
+            movement={movement}
+            movementsDto={movementsDto}
+            navigateToPrint={navigateToPrint}
+          />
+        ),
       }}
     </PageLayout>
   );

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Badge,
   Box,
@@ -8,6 +8,7 @@ import {
   IconButton,
   Stack,
   Text,
+  Toast,
   Tooltip,
 } from "@chakra-ui/react";
 import DataTable, { BaseColumn } from "Base/components/DataTable";
@@ -15,16 +16,36 @@ import formatPrice from "Base/utils/formatters/formatPrice";
 import getMovementTypeColor from "Movements/utils/getMovementTypeColor";
 import formatDatetime from "Base/utils/formatters/formatDatetime";
 import {
+  CreateMovementDto,
+  Movements,
+  MovementsDto,
   StockMovementDetail2,
   ViewMovements2,
 } from "Movements/data/MovementsRepository";
 import { PrinterIcon } from "@heroicons/react/24/outline";
+import updateStockMovement from "Movements/data/MovementsRepository/services/updateStockMovement";
+import useUpdateStockMovementService from "Movements/data/MovementsRepository/hooks/useUpdateProductService";
+import useUpdateMovementsStates from "Movements/hooks/useUpdateMovementsStates";
+import getMovementById from "Movements/data/MovementsRepository/services/getMovementById";
 
 interface MovementDetailsProps {
   movement: ViewMovements2 | null;
+  navigateToPrint: (factureLink: string) => void;
+  movementsDto: MovementsDto;
 }
 
-const MovementDetails = ({ movement }: MovementDetailsProps) => {
+const MovementDetails = ({
+  movement,
+  navigateToPrint,
+  movementsDto,
+}: MovementDetailsProps) => {
+  const { updateStockMovement } = useUpdateStockMovementService();
+
+  const { loading, error, successFetch, failureFetch, startFetch } =
+    useUpdateMovementsStates();
+
+  const [factureLink, setFactureLink] = useState<string | null>(null);
+
   const movementDetailsColumns: BaseColumn<StockMovementDetail2>[] = useMemo(
     () => [
       {
@@ -48,6 +69,23 @@ const MovementDetails = ({ movement }: MovementDetailsProps) => {
     return <>No existe el movimiento que intentas buscar</>;
   }
 
+  const handleNavigateToPrint = (factureLink: string) => {
+    window.open(factureLink, "_blank"); // Abre el link en una nueva pestaña
+  };
+
+  const handleUpdateProduct = (data: Movements) => {
+    if (loading) return; // Previene múltiples solicitudes
+
+    startFetch();
+    updateStockMovement(data, data.id)
+      .then((productUpdated) => {
+        successFetch(productUpdated);
+        setFactureLink(productUpdated.factureLink);
+      })
+      .catch((axiosError) => {
+        failureFetch(axiosError.response.data.message);
+      });
+  };
   return (
     <Stack>
       <Card px={6} py={6}>
@@ -77,7 +115,12 @@ const MovementDetails = ({ movement }: MovementDetailsProps) => {
               icon={<PrinterIcon />}
               size="sm"
               variant="outline"
-              // onClick={() => handlePrint()}
+              onClick={() =>
+                (factureLinkSet || row.factureLink) === null
+                  ? handleUpdateProduct(row.id)
+                  : navigateToPrint(factureLinkSet || row.factureLink)
+              }
+              isLoading={loadingPrint} // Deshabilita el botón y muestra un spinner mientras carga
             />
           </Tooltip>
         </Stack>

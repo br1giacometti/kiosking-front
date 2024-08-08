@@ -12,6 +12,7 @@ export const StockMovementDetailSchema = z.object({
   quantity: z.number(),
   sellPrice: z.number().optional(),
   description: z.string().min(1, { message: "Required" }),
+  wasFactued: z.boolean(),
 });
 
 export type StockMovementDetail = z.infer<typeof StockMovementDetailSchema>;

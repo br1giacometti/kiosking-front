@@ -16,7 +16,11 @@ import DataTable, { BaseColumn } from "Base/components/DataTable";
 import useLastMovements from "Movements/data/MovementsRepository/hooks/useLastMovements";
 import { MovementListItem } from "Movements/data/MovementsRepository";
 
-const LastMovementsList = () => {
+interface LastMovementsListProps {
+  navigateToPrint: (factureLink: string) => void;
+}
+
+const LastMovementsList = ({ navigateToPrint }: LastMovementsListProps) => {
   const toast = useToast();
   const { t } = useTranslation("movements");
   const { error, loading, movementsList } = useLastMovements();
@@ -49,7 +53,11 @@ const LastMovementsList = () => {
                   icon={<PrinterIcon />}
                   size="sm"
                   variant="outline"
-                  // onClick={() => navigateToEdit(row)}
+                  onClick={() =>
+                    row.factureLink
+                      ? navigateToPrint(row.factureLink)
+                      : console.log("no hay ticket")
+                  }
                 />
               </Tooltip>
             </Flex>

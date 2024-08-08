@@ -58,6 +58,7 @@ const CreateBuyMovement = ({ navigateToMovements }: CreateMovementsProps) => {
       description: data.description,
       movementType: data.movementType,
       value: data.value, // hardcode
+      wasFactured: true,
     })
       .then((movementsCreated) => {
         reset();

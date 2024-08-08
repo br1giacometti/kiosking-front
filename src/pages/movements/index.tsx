@@ -28,6 +28,10 @@ const MovementsPage = () => {
     [router]
   );
 
+  const navigateToPrint = (factureLink: string) => {
+    window.open(factureLink, "_blank"); // Abre el link en una nueva pestaña
+  };
+
   return (
     <MovementsLayout>
       {{
@@ -38,7 +42,12 @@ const MovementsPage = () => {
             navigateToCreateWithdraw={navigateToCreateWithdraw}
           />
         ),
-        content: <MovementsList navigateToDetails={navigateToDetails} />,
+        content: (
+          <MovementsList
+            navigateToDetails={navigateToDetails}
+            navigateToPrint={navigateToPrint}
+          />
+        ),
       }}
     </MovementsLayout>
   );

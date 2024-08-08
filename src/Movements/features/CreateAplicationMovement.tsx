@@ -13,6 +13,7 @@ import { useTranslation } from "Base/i18n";
 import useCreateMovementsStates from "Movements/hooks/useCreateMovementsStates";
 import {
   MovementListItem,
+  Movements,
   useCreateMovementsService,
 } from "Movements/data/MovementsRepository";
 import FormPageLayout from "Base/layout/FormPageLayout";
@@ -27,13 +28,17 @@ import DataTable, { BaseColumn } from "Base/components/DataTable";
 import formatDatetime from "Base/utils/formatters/formatDatetime";
 import formatPrice from "Base/utils/formatters/formatPrice";
 import { PrinterIcon } from "@heroicons/react/24/outline";
+import useUpdateStockMovementService from "Movements/data/MovementsRepository/hooks/useUpdateProductService";
+import useUpdateMovementsStates from "Movements/hooks/useUpdateMovementsStates";
+import getMovementById from "Movements/data/MovementsRepository/services/getMovementById";
+import useUpdateMovementsStates2 from "Movements/hooks/useUpdateMovementsStates2";
 
 interface CreateMovementsProps {
-  navigateToMovements: () => void;
+  navigateToPrint: (factureLink: string) => void;
 }
 
 const CreateAplicationMovement = ({
-  navigateToMovements,
+  navigateToPrint,
 }: CreateMovementsProps) => {
   const toast = useToast();
   const { t } = useTranslation("movements");
@@ -46,8 +51,13 @@ const CreateAplicationMovement = ({
   } = useFormContext<CreateAplicationSchema>();
 
   const { createMovements } = useCreateMovementsService();
-  const { loading, error, startFetch, successFetch, failureFetch } =
-    useCreateMovementsStates();
+  const {
+    loading: loadingCreate,
+    error,
+    startFetch,
+    successFetch,
+    failureFetch,
+  } = useCreateMovementsStates();
   const { isOpen, onClose, onOpen } = useDisclosure({ defaultIsOpen: false });
 
   const {
@@ -65,6 +75,17 @@ const CreateAplicationMovement = ({
     setTotalAmount(amount);
   };
 
+  const { updateStockMovement } = useUpdateStockMovementService();
+
+  const {
+    loadingPrint,
+    successFetchPrint,
+    failureFetchPrint,
+    startFetchPrint,
+  } = useUpdateMovementsStates2();
+
+  const [factureLinkSet, setFactureLinkSet] = useState<string | null>(null);
+
   const handleCreateMovements = (data: CreateAplicationSchema) => {
     startFetch();
 
@@ -74,6 +95,7 @@ const CreateAplicationMovement = ({
         quantity: product.quantity,
         sellPrice: product.sellPrice,
       })),
+      wasFactured: true,
       date: new Date(),
       description: "Hardcoded description", // Hardcoded value
       movementType: "SELL", // Hardcoded value
@@ -112,6 +134,27 @@ const CreateAplicationMovement = ({
     }
   }, [errorLast, toast]);
 
+  const handleUpdateProduct = async (id: number) => {
+    if (loadingPrint) return; // Previene múltiples solicitudes
+
+    startFetchPrint(); // Inicia la carga
+    try {
+      const movement = await getMovementById(id);
+      if (movement) {
+        const productUpdated = await updateStockMovement(movement, movement.id);
+        successFetchPrint(productUpdated);
+        setFactureLinkSet(productUpdated.factureLink);
+      }
+      refetch();
+    } catch (error) {
+      failureFetchPrint("Error fetching movement");
+    } finally {
+      // Asegúrate de que el estado de carga se restablezca
+      // Si el loading es gestionado en el hook useUpdateMovementsStates
+      // se debería manejar automáticamente.
+    }
+  };
+
   const columns: BaseColumn<MovementListItem>[] = useMemo(
     () => [
       {
@@ -125,24 +168,27 @@ const CreateAplicationMovement = ({
       {
         label: t("Acciones"),
         selector: (row) => (
-          <>
-            <Flex gap={2}>
-              <Tooltip label={t("Imprimir")} placement="bottom">
-                <IconButton
-                  aria-label="Edit icon"
-                  colorScheme="gray"
-                  icon={<PrinterIcon />}
-                  size="sm"
-                  variant="outline"
-                  // onClick={() => navigateToEdit(row)}
-                />
-              </Tooltip>
-            </Flex>
-          </>
+          <Flex gap={2}>
+            <Tooltip label="Imprimir Ticket" placement="bottom">
+              <IconButton
+                aria-label="Print"
+                colorScheme="gray"
+                icon={<PrinterIcon />}
+                size="sm"
+                variant="outline"
+                onClick={() =>
+                  row.factureLink === null
+                    ? handleUpdateProduct(row.id)
+                    : navigateToPrint(row.factureLink)
+                }
+                isLoading={loadingPrint}
+              />
+            </Tooltip>
+          </Flex>
         ),
       },
     ],
-    [t]
+    [loadingPrint, t, onOpen, handleUpdateProduct, factureLinkSet]
   );
 
   return (
@@ -157,12 +203,12 @@ const CreateAplicationMovement = ({
           />
         </FormSectionLayout>
 
-        <Button colorScheme="main" isLoading={loading} onClick={onOpen}>
+        <Button colorScheme="main" isLoading={loadingCreate} onClick={onOpen}>
           Confirmar Venta
         </Button>
         <ConfirmCreateModal
           description="Esta seguro de confirmar la venta?"
-          isLoading={loading}
+          isLoading={loadingCreate}
           isOpen={isOpen}
           title="Realizar venta"
           onClose={onClose}
