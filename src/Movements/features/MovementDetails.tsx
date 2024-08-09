@@ -30,15 +30,10 @@ import getMovementById from "Movements/data/MovementsRepository/services/getMove
 
 interface MovementDetailsProps {
   movement: ViewMovements2 | null;
-  navigateToPrint: (factureLink: string) => void;
   movementsDto: MovementsDto;
 }
 
-const MovementDetails = ({
-  movement,
-  navigateToPrint,
-  movementsDto,
-}: MovementDetailsProps) => {
+const MovementDetails = ({ movement, movementsDto }: MovementDetailsProps) => {
   const { updateStockMovement } = useUpdateStockMovementService();
 
   const { loading, error, successFetch, failureFetch, startFetch } =
@@ -116,11 +111,11 @@ const MovementDetails = ({
               size="sm"
               variant="outline"
               onClick={() =>
-                (factureLinkSet || row.factureLink) === null
-                  ? handleUpdateProduct(row.id)
-                  : navigateToPrint(factureLinkSet || row.factureLink)
+                (factureLink || movement.factureLink) === null
+                  ? handleUpdateProduct(movement)
+                  : handleNavigateToPrint(factureLink || movement.factureLink)
               }
-              isLoading={loadingPrint} // Deshabilita el botón y muestra un spinner mientras carga
+              isLoading={loading} // Deshabilita el botón y muestra un spinner mientras carga
             />
           </Tooltip>
         </Stack>

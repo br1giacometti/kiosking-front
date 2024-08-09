@@ -19,7 +19,6 @@ interface MovementDetailsPageProps {
 
 const MovementDetailsPage = ({
   movement,
-  navigateToPrint,
   movementsDto,
 }: MovementDetailsPageProps) => {
   return (
@@ -30,11 +29,7 @@ const MovementDetailsPage = ({
             <Heading>{"Detalle movimiento: " + movement.description}</Heading>
           ) : null,
         content: (
-          <MovementDetails
-            movement={movement}
-            movementsDto={movementsDto}
-            navigateToPrint={navigateToPrint}
-          />
+          <MovementDetails movement={movement} movementsDto={movementsDto} />
         ),
       }}
     </PageLayout>

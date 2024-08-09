@@ -22,7 +22,7 @@ export interface CreateMovementDto {
   batchId?: number;
   aplicatorId?: number;
   wasFactured: Boolean;
-  linkFacture?: string;
+  factureLink?: string;
 }
 
 export interface Movements {
@@ -38,7 +38,7 @@ export interface Movements {
   batch?: Batch;
   id: number;
   wasFactured: Boolean;
-  linkFacture: string;
+  factureLink: string;
 }
 
 export interface MovementsDto {
@@ -139,7 +139,7 @@ export interface ViewMovements2 {
   date: Date;
   value: number;
   stockMovementDetail: StockMovementDetail[];
-  linkFacture: string;
+  factureLink: string;
   description: string;
   MovementType: string;
   warehouseOrigin?: Warehouse;
@@ -150,6 +150,12 @@ export interface ViewMovements2 {
   wasFactured: Boolean;
 }
 
+export interface MovementsPaginatedReturn {
+  data: MovementListItem[];
+  meta: PaginationMeta;
+  payload: Movements[]; // Asegúrate de que payload sea de tipo MovementListItem[]
+}
+
 export interface MovementsRepository {
   createBuyMovements: (body: CreateMovementDto) => Promise<Movements>;
   getAllMovements: () => Promise<MovementListItem[]>;
@@ -158,5 +164,10 @@ export interface MovementsRepository {
   updateStockMovement: (
     body: Movements,
     movementId: number
+  ) => Promise<Movements>;
+  getAllMovementsByQuery: (
+    query: string,
+    startDate?: string,
+    endDate?: string
   ) => Promise<Movements>;
 }

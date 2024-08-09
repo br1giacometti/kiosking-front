@@ -5,6 +5,7 @@ import getAllMovements from "./services/getAllMovements";
 import getLastMovements from "./services/getLastMovements";
 import getMovementById from "./services/getMovementById";
 import updateStockMovement from "./services/updateStockMovement";
+import getAllMovementsByQuery from "./services/getAllMovementsByQuery";
 
 const createMovementsRepository = (userToken: string): MovementsRepository => {
   movementsClient.defaults.headers.common = {
@@ -17,6 +18,7 @@ const createMovementsRepository = (userToken: string): MovementsRepository => {
     getLastMovements,
     getMovementById,
     updateStockMovement,
+    getAllMovementsByQuery,
   };
 };
 
