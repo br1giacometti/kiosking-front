@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 const createProductSchema = z.object({
-  description: z.string().min(2, { message: "nameMustBeAtleast3" }),
-  barCode: z.string().min(2, { message: "nameMustBeAtleast3" }),
+  description: z.string().min(1, { message: "nameMustBeAtleast3" }),
+  barCode: z.string().min(1, { message: "nameMustBeAtleast3" }),
   sellPrice: z.string().transform((val, ctx) => {
     const parsed = Number.parseInt(val.replaceAll(".", ""), 10);
     if (Number.isNaN(parsed)) {

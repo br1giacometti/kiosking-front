@@ -104,7 +104,7 @@ const ProductList = ({ navigateToEdit }: ProductListProps) => {
         selector: (row) => formatPrice(row.sellPrice),
       },
       {
-        label: t("datatable.label.sellPrice"),
+        label: t("Categoria"),
         selector: (row) => row.category.description,
       },
       {
