@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useReducer, useState } from "react";
 import { TokenHandler } from "@kushitech/auth-module";
 import FetchActionTypes from "Base/types/FetchActionTypes";
-import useDebounce from "Base/hooks/useDebounce";
 import createProductRepository from "../createProductRepository";
 import listProductReducer, {
   initialState,
@@ -10,7 +9,6 @@ import { PaginationMeta } from "../types";
 
 const useAllProductPaginated = () => {
   const [query, setQuery] = useState<string>("");
-  const debouncedInputValue = useDebounce(query, 500);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [meta, setMeta] = useState<PaginationMeta | null>(null);
   const [invalidated, setInvalidateCache] = useState<boolean | undefined>(
@@ -35,7 +33,7 @@ const useAllProductPaginated = () => {
     if (invalidated !== undefined) {
       dispatch({ type: FetchActionTypes.Start });
       repository
-        .getAllProductPaginated(currentPage, 10, debouncedInputValue)
+        .getAllProductPaginated(currentPage, 150, query)
         .then((data) => {
           dispatch({ type: FetchActionTypes.Succeess, payload: data.data });
           setMeta(data.meta);
@@ -46,7 +44,7 @@ const useAllProductPaginated = () => {
           setInvalidateCache(false); // Reset the cache invalidation state on error
         });
     }
-  }, [invalidated, currentPage, debouncedInputValue, repository]);
+  }, [invalidated, currentPage, query, repository]);
 
   return {
     productList,

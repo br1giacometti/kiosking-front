@@ -22,6 +22,7 @@ import useProductsOptions from "Movements/hooks/useProductsOptions";
 import OptionItem from "Base/types/OptionItem";
 import formatPrice from "Base/utils/formatters/formatPrice";
 import { StockMovementDetail } from "Movements/schemas/CreateAplicationSchema";
+import useDebounce from "Base/hooks/useDebounce";
 
 interface StockMovementDetailWithId extends StockMovementDetail {
   id: string;
@@ -39,7 +40,7 @@ const FormCreateAplicationDetails = ({
   } = useCreateAplicationContext();
 
   const { options } = useProductsOptions();
-
+  
   type ProductOption = OptionItem<number> & {
     barCode: string;
     sellPrice: number;
@@ -47,35 +48,40 @@ const FormCreateAplicationDetails = ({
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredOptions, setFilteredOptions] = useState<ProductOption[]>([]);
-  const [selectedProduct, setSelectedProduct] = useState<ProductOption | null>(
-    null
-  );
+  const [selectedProduct, setSelectedProduct] = useState<ProductOption | null>(null);
+  const [showOptions, setShowOptions] = useState(false); // Estado para controlar la visibilidad de la lista
+
+  const debouncedSearchTerm = useDebounce(searchTerm, 300); // Ajusta el tiempo según necesites
 
   const handleSearchChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value;
       setSearchTerm(value);
-
-      if (value) {
-        setFilteredOptions(
-          options.filter(
-            (option) =>
-              option.label.toLowerCase().includes(value.toLowerCase()) ||
-              option.barCode.toLowerCase().includes(value.toLowerCase())
-          )
-        );
-      } else {
-        setFilteredOptions([]);
-      }
     },
-    [options]
+    []
   );
+
+  useEffect(() => {
+    if (debouncedSearchTerm) {
+      const newFilteredOptions = options.filter(
+        (option) =>
+          option.label.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+          option.barCode.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
+      );
+      setFilteredOptions(newFilteredOptions);
+      setShowOptions(newFilteredOptions.length > 0); // Asegúrate de mostrar opciones solo si hay resultados
+    } else {
+      setFilteredOptions([]);
+      setShowOptions(false); // Ocultar opciones si no hay texto
+    }
+  }, [debouncedSearchTerm, options]);
 
   const handleSelectProduct = useCallback(
     (product: ProductOption) => {
       setSelectedProduct(product);
-      setSearchTerm("");
-      setFilteredOptions([]);
+      setSearchTerm(""); // Limpia el término de búsqueda
+      setFilteredOptions([]); // Limpia las opciones filtradas
+      setShowOptions(false); // Oculta la lista de opciones
       append({
         product: {
           productId: product.value,
@@ -233,7 +239,7 @@ const FormCreateAplicationDetails = ({
               <Icon as={MagnifyingGlassIcon} />
             </InputRightElement>
           </InputGroup>
-          {filteredOptions.length > 0 && (
+          {showOptions && filteredOptions.length > 0 && (
             <Box
               borderWidth={1}
               borderRadius="md"
@@ -279,4 +285,4 @@ const FormCreateAplicationDetails = ({
   );
 };
 
-export default FormCreateAplicationDetails;
+export default FormCreateAplicationDetails

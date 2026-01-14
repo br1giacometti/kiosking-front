@@ -8,6 +8,7 @@ import { Controller } from "react-hook-form";
 import useProductsOptions from "Movements/hooks/useProductsOptions";
 import { OnChangeValue, SingleValue } from "chakra-react-select";
 import OptionItem from "Base/types/OptionItem";
+import { useAllProductService } from "Product/data/ProductRepository";
 
 interface FormCreateOwnerProps {
   id: string;
@@ -15,7 +16,7 @@ interface FormCreateOwnerProps {
 }
 
 const FormCreateAplicationDetail = ({ index }: FormCreateOwnerProps) => {
-  const { options, loading } = useProductsOptions();
+  const { productList, loading } = useAllProductService();
 
   const {
     register,
@@ -42,51 +43,50 @@ const FormCreateAplicationDetail = ({ index }: FormCreateOwnerProps) => {
           minW={{ lg: "md" }}
           title={`${"Seleccionar rdasro"}`}
         >
-          <Controller
-            control={control}
-            name={`stockMovementDetail.${index}.product`}
-            render={({ field }) => (
-              <FormSelect
-                ref={field.ref}
-                isRequired
-                errorMessage={
-                  errors.stockMovementDetail?.message
-                    ? "Debe seleccionar un producto"
-                    : undefined
-                }
-                isLoading={loading}
-                label={"Seleccionar producto"}
-                name={field.name}
-                options={options}
-                value={
-                  field.value &&
-                  "productId" in field.value &&
-                  field.value.productId !== null
-                    ? {
-                        label: field.value.description,
-                        value: field.value.productId,
-                      }
-                    : null
-                }
-                onChange={(newValue) => {
-                  const optionSelected = newValue as OnChangeValue<
-                    OptionItem<number>,
-                    false
-                  >;
-                  field.onChange(
-                    optionSelected
-                      ? {
-                          description: optionSelected.label,
-                          productId: optionSelected.value,
-                        }
-                      : null
-                  );
-                }}
-                // Asegúrate de que el componente pueda recibir clicks correctamente
-                className="form-select"
-              />
-            )}
-          />
+<Controller
+  control={control}
+  name={`stockMovementDetail.${index}.product`}
+  render={({ field }) => (
+    <FormSelect
+      ref={field.ref}
+      isRequired
+      errorMessage={
+        errors.stockMovementDetail?.message
+          ? "Debe seleccionar un producto"
+          : undefined
+      }
+      isLoading={loading}
+      label={"Seleccionar producto"}
+      name={field.name}
+      options={productList.map(option => ({
+        label: `${option.description} - $${option.sellPrice}`, // Asegúrate de que 'label' y 'sellPrice' sean correctos
+        value: option.id,
+      }))}
+      value={
+        field.value && field.value.productId
+          ? {
+              label: `${field.value.description} - $${field.value.sellPrice}`,
+              value: field.value.productId,
+            }
+          : null
+      }
+      onChange={(newValue) => {
+        const optionSelected = newValue as OnChangeValue<OptionItem<number>, false>;
+        field.onChange(
+          optionSelected
+            ? {
+                description: optionSelected.label.split(' - ')[0],
+                sellPrice: parseFloat(optionSelected.label.split(' - ')[1].replace('$', '')),
+                productId: optionSelected.value,
+              }
+            : null
+        );
+      }}
+      className="form-select"
+    />
+  )}
+/>
+
 
           <FormInputText
             isRequired

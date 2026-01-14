@@ -17,7 +17,7 @@ const useProductsOptions = (): UseProductsOptionsReturn => {
 
   // Mapea productList a ProductOption
   const options: ProductOption[] = productList.map((product) => ({
-    label: `${product.description}`,
+    label: `${product.description + " " + " $ " + product.sellPrice}`,
     value: product.id,
     sellPrice: product.sellPrice,
     barCode: product.barCode,
