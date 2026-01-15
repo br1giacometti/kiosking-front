@@ -139,8 +139,9 @@ const SalesChart = ({ movementsList, selectedRange }: SalesChartProps) => {
       if (movementDate >= startDate && movementDate <= endDate) {
         if (totalsByDate[formattedDate]) {
           totalsByDate[formattedDate].sales += movement.value;
-          // wasFactured para ventas nuevas, factureLink como fallback para históricos
-          if (movement.wasFactured || movement.factureLink) {
+          // Lógica facturado: cae (nuevo sistema desde Ene 2026) || factureLink (sistema viejo)
+          // NO usamos wasFactured porque antes podía quedar en true sin generar CAE
+          if (movement.cae || movement.factureLink) {
             totalsByDate[formattedDate].invoiced += movement.value;
           }
         }

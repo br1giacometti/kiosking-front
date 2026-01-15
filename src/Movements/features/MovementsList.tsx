@@ -144,10 +144,19 @@ const MovementsList = ({
     return movementsList.reduce((acc, movement) => acc + movement.value, 0);
   }, [movementsList]);
 
+  /**
+   * Total Facturado: suma de ventas que fueron facturadas en AFIP
+   * 
+   * Lógica: cae || factureLink
+   * - cae: Campo nuevo (desde Ene 2026). Si tiene CAE, AFIP autorizó la factura.
+   * - factureLink: Campo viejo. Antes se generaba PDF al facturar, así que si tiene link está facturado.
+   * 
+   * NO usamos wasFactured porque antes podía quedar en true sin generar CAE
+   * si la venta excedía los límites configurados.
+   */
   const totalInvoiced = useMemo(() => {
     return movementsList.reduce(
-      // wasFactured para ventas nuevas, factureLink como fallback para históricos
-      (acc, movement) => (movement.wasFactured || movement.factureLink ? acc + movement.value : acc),
+      (acc, movement) => (movement.cae || movement.factureLink ? acc + movement.value : acc),
       0
     );
   }, [movementsList]);

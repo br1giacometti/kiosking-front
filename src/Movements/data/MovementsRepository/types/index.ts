@@ -101,6 +101,7 @@ export interface MovementListItem {
   id: number;
   factureLink: string;
   wasFactured: boolean;
+  cae?: string;
 }
 
 export interface MovementListProductItem {
