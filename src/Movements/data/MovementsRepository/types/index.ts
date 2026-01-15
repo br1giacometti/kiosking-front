@@ -100,6 +100,7 @@ export interface MovementListItem {
   warehouseDestiny: string;
   id: number;
   factureLink: string;
+  wasFactured: boolean;
 }
 
 export interface MovementListProductItem {

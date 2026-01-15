@@ -43,7 +43,7 @@ const EditMultiProduct = ({ navigateToProduct }: EditMultiProductProps) => {
     currentPage,
     setCurrentPage,
     refetch,
-  } = useAllProductPaginated();
+  } = useAllProductPaginated({ itemsPerPage: 200 });
   const { options, loading: loading2 } = useCategoryOptions();
   const { isOpen, onClose, onOpen } = useDisclosure({ defaultIsOpen: false });
 

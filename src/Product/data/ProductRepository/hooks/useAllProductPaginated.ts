@@ -6,14 +6,26 @@ import listProductReducer, {
   initialState,
 } from "../reducer/listProductReducer";
 import { PaginationMeta } from "../types";
+import useDebounce from "Base/hooks/useDebounce";
 
-const useAllProductPaginated = () => {
+// Límite de productos por página por defecto
+const DEFAULT_ITEMS_PER_PAGE = 50;
+
+interface UseAllProductPaginatedOptions {
+  itemsPerPage?: number;
+}
+
+const useAllProductPaginated = (options?: UseAllProductPaginatedOptions) => {
+  const itemsPerPage = options?.itemsPerPage ?? DEFAULT_ITEMS_PER_PAGE;
   const [query, setQuery] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [meta, setMeta] = useState<PaginationMeta | null>(null);
   const [invalidated, setInvalidateCache] = useState<boolean | undefined>(
     false
   );
+
+  // Debounce de 500ms para evitar requests en cada tecla
+  const debouncedQuery = useDebounce(query, 500);
 
   const repository = useMemo(
     () => createProductRepository(TokenHandler.getTokenFromCookies() || ""),
@@ -33,7 +45,7 @@ const useAllProductPaginated = () => {
     if (invalidated !== undefined) {
       dispatch({ type: FetchActionTypes.Start });
       repository
-        .getAllProductPaginated(currentPage, 150, query)
+        .getAllProductPaginated(currentPage, itemsPerPage, debouncedQuery)
         .then((data) => {
           dispatch({ type: FetchActionTypes.Succeess, payload: data.data });
           setMeta(data.meta);
@@ -44,7 +56,7 @@ const useAllProductPaginated = () => {
           setInvalidateCache(false); // Reset the cache invalidation state on error
         });
     }
-  }, [invalidated, currentPage, query, repository]);
+  }, [invalidated, currentPage, debouncedQuery, repository]);
 
   return {
     productList,

@@ -89,7 +89,7 @@ const SalesChart = ({ movementsList, selectedRange }: SalesChartProps) => {
       selectedRange === "lastWeek"
         ? dateRange.map((date) => format(date, "EEEE dd MMMM", { locale: es }))
         : selectedRange === "lastMonth"
-        ? dateRange.map((date) => {
+          ? dateRange.map((date) => {
             const weekStart = startOfWeek(date);
             const weekEnd = endOfWeek(date);
             return `Semana ${getISOWeek(weekStart)} (${format(
@@ -98,7 +98,7 @@ const SalesChart = ({ movementsList, selectedRange }: SalesChartProps) => {
               { locale: es }
             )} - ${format(weekEnd, "dd MMM", { locale: es })})`;
           })
-        : dateRange.map((date) =>
+          : dateRange.map((date) =>
             format(
               date,
               selectedRange === "lastYear" ? "MMMM yyyy" : "dd MMMM yyyy",
@@ -139,7 +139,8 @@ const SalesChart = ({ movementsList, selectedRange }: SalesChartProps) => {
       if (movementDate >= startDate && movementDate <= endDate) {
         if (totalsByDate[formattedDate]) {
           totalsByDate[formattedDate].sales += movement.value;
-          if (movement.factureLink) {
+          // wasFactured para ventas nuevas, factureLink como fallback para históricos
+          if (movement.wasFactured || movement.factureLink) {
             totalsByDate[formattedDate].invoiced += movement.value;
           }
         }

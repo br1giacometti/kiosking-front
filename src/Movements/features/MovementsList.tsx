@@ -146,7 +146,8 @@ const MovementsList = ({
 
   const totalInvoiced = useMemo(() => {
     return movementsList.reduce(
-      (acc, movement) => (movement.factureLink ? acc + movement.value : acc),
+      // wasFactured para ventas nuevas, factureLink como fallback para históricos
+      (acc, movement) => (movement.wasFactured || movement.factureLink ? acc + movement.value : acc),
       0
     );
   }, [movementsList]);

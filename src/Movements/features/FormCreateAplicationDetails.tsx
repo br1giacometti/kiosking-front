@@ -9,8 +9,9 @@ import {
   VStack,
   InputGroup,
   InputRightElement,
+  Spinner,
 } from "@chakra-ui/react";
-import { useCallback, useMemo, useState, useEffect } from "react";
+import { useCallback, useMemo, useState, useEffect, useRef } from "react";
 import {
   HomeModernIcon,
   MagnifyingGlassIcon,
@@ -18,11 +19,10 @@ import {
 } from "@heroicons/react/24/outline";
 import DataTable, { BaseColumn } from "Base/components/DataTable";
 import useCreateAplicationContext from "Movements/contexts/CreateBuyContext/hooks/useCreateAplicationContext";
-import useProductsOptions from "Movements/hooks/useProductsOptions";
-import OptionItem from "Base/types/OptionItem";
 import formatPrice from "Base/utils/formatters/formatPrice";
 import { StockMovementDetail } from "Movements/schemas/CreateAplicationSchema";
-import useDebounce from "Base/hooks/useDebounce";
+import useSearchProducts from "Product/data/ProductRepository/hooks/useSearchProducts";
+import { Product } from "Product/data/ProductRepository";
 
 interface StockMovementDetailWithId extends StockMovementDetail {
   id: string;
@@ -39,59 +39,59 @@ const FormCreateAplicationDetails = ({
     stockMovementDetail: { fields, append, update, remove },
   } = useCreateAplicationContext();
 
-  const { options } = useProductsOptions();
-  
-  type ProductOption = OptionItem<number> & {
-    barCode: string;
-    sellPrice: number;
-  };
-
+  // Búsqueda en backend con debounce de 500ms
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredOptions, setFilteredOptions] = useState<ProductOption[]>([]);
-  const [selectedProduct, setSelectedProduct] = useState<ProductOption | null>(null);
-  const [showOptions, setShowOptions] = useState(false); // Estado para controlar la visibilidad de la lista
+  const { products, loading, searchByBarcode } = useSearchProducts(searchTerm, 500);
+  
+  const [showOptions, setShowOptions] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const debouncedSearchTerm = useDebounce(searchTerm, 300); // Ajusta el tiempo según necesites
+  // Mostrar opciones cuando hay productos
+  useEffect(() => {
+    setShowOptions(products.length > 0 && searchTerm.length > 0);
+  }, [products, searchTerm]);
+
+  // Cerrar dropdown al hacer click afuera
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node) &&
+        inputRef.current &&
+        !inputRef.current.contains(event.target as Node)
+      ) {
+        setShowOptions(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleSearchChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const value = e.target.value;
-      setSearchTerm(value);
+      setSearchTerm(e.target.value);
     },
     []
   );
 
-  useEffect(() => {
-    if (debouncedSearchTerm) {
-      const newFilteredOptions = options.filter(
-        (option) =>
-          option.label.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
-          option.barCode.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
-      );
-      setFilteredOptions(newFilteredOptions);
-      setShowOptions(newFilteredOptions.length > 0); // Asegúrate de mostrar opciones solo si hay resultados
-    } else {
-      setFilteredOptions([]);
-      setShowOptions(false); // Ocultar opciones si no hay texto
-    }
-  }, [debouncedSearchTerm, options]);
-
   const handleSelectProduct = useCallback(
-    (product: ProductOption) => {
-      setSelectedProduct(product);
-      setSearchTerm(""); // Limpia el término de búsqueda
-      setFilteredOptions([]); // Limpia las opciones filtradas
-      setShowOptions(false); // Oculta la lista de opciones
+    (product: Product) => {
+      setSearchTerm("");
+      setShowOptions(false);
       append({
         product: {
-          productId: product.value,
-          description: product.label,
+          productId: product.id,
+          description: `${product.description} $ ${product.sellPrice}`,
           quantity: 1,
           sellPrice: product.sellPrice,
         },
         quantity: 1,
         sellPrice: product.sellPrice,
-        description: product.label,
+        description: `${product.description} $ ${product.sellPrice}`,
         wasFactued: true,
       });
     },
@@ -119,21 +119,48 @@ const FormCreateAplicationDetails = ({
     [remove]
   );
 
+  // Para código de barras: búsqueda inmediata sin debounce
   const handleSearchKeyPress = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
+    async (e: React.KeyboardEvent<HTMLInputElement>) => {
+      // Cerrar dropdown con Escape
+      if (e.key === "Escape") {
+        setShowOptions(false);
+        setSearchTerm("");
+        return;
+      }
+
       if (e.key === "Enter") {
         e.preventDefault();
-        const product = options.find(
-          (option) =>
-            option.label.toLowerCase() === searchTerm.toLowerCase() ||
-            option.barCode.toLowerCase() === searchTerm.toLowerCase()
+        
+        // EXCEPCIÓN: Si busca exactamente "1", buscar producto "Varios" directamente
+        if (searchTerm === "1") {
+          const variosProduct = await searchByBarcode("varios");
+          if (variosProduct) {
+            handleSelectProduct(variosProduct);
+            return;
+          }
+        }
+
+        // Lógica normal: buscar por código de barras o descripción
+        const productFound = products.find(
+          (p) =>
+            p.barCode.toLowerCase() === searchTerm.toLowerCase() ||
+            p.description.toLowerCase().includes(searchTerm.toLowerCase())
         );
+        
+        if (productFound) {
+          handleSelectProduct(productFound);
+          return;
+        }
+
+        // Si no está en la lista, buscar en backend
+        const product = await searchByBarcode(searchTerm);
         if (product) {
-          handleSelectProduct(product as ProductOption);
+          handleSelectProduct(product);
         }
       }
     },
-    [options, searchTerm, handleSelectProduct]
+    [products, searchTerm, handleSelectProduct, searchByBarcode]
   );
 
   const totalAmount = useMemo(
@@ -229,6 +256,7 @@ const FormCreateAplicationDetails = ({
         <VStack spacing={4} flex="1">
           <InputGroup mb={4}>
             <Input
+              ref={inputRef}
               placeholder="Buscar producto por nombre o código de barra"
               variant="outline"
               value={searchTerm}
@@ -236,11 +264,16 @@ const FormCreateAplicationDetails = ({
               onKeyDown={handleSearchKeyPress}
             />
             <InputRightElement>
-              <Icon as={MagnifyingGlassIcon} />
+              {loading ? (
+                <Spinner size="sm" />
+              ) : (
+                <Icon as={MagnifyingGlassIcon} />
+              )}
             </InputRightElement>
           </InputGroup>
-          {showOptions && filteredOptions.length > 0 && (
+          {showOptions && products.length > 0 && (
             <Box
+              ref={dropdownRef}
               borderWidth={1}
               borderRadius="md"
               overflow="hidden"
@@ -248,16 +281,19 @@ const FormCreateAplicationDetails = ({
               shadow="md"
               w="full"
               mb={4}
+              maxH="300px"
+              overflowY="auto"
             >
               <Box p={4}>
-                {filteredOptions.map((option) => (
+                {products.map((product) => (
                   <Button
-                    key={option.value}
+                    key={product.id}
                     w="full"
                     mb={2}
-                    onClick={() => handleSelectProduct(option)}
+                    onClick={() => handleSelectProduct(product)}
+                    justifyContent="flex-start"
                   >
-                    {option.label}
+                    {product.description} - ${product.sellPrice}
                   </Button>
                 ))}
               </Box>
@@ -285,4 +321,4 @@ const FormCreateAplicationDetails = ({
   );
 };
 
-export default FormCreateAplicationDetails
+export default FormCreateAplicationDetails;

@@ -9,16 +9,20 @@ import formatPrice from "Base/utils/formatters/formatPrice";
 import useAllProductPaginated from "Product/data/ProductRepository/hooks/useAllProductPaginated";
 import {
   Box,
+  Button,
   Flex,
+  HStack,
   Icon,
   IconButton,
   Input,
   InputGroup,
   InputRightElement,
+  Text,
   Tooltip,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
+import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import useDeletePersonService from "Product/data/ProductRepository/hooks/useDeleteProductService";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
@@ -179,6 +183,32 @@ const ProductList = ({ navigateToEdit }: ProductListProps) => {
         </Box>
       </Flex>
       <DataTable columns={columns} data={productList} loading={loading} />
+      
+      {/* Controles de paginación */}
+      {meta && (
+        <Flex justifyContent="center" alignItems="center" mt={4} mb={4}>
+          <HStack spacing={4}>
+            <IconButton
+              aria-label="Página anterior"
+              icon={<ChevronLeftIcon />}
+              isDisabled={currentPage <= 1}
+              onClick={() => setCurrentPage(currentPage - 1)}
+              size="sm"
+            />
+            <Text>
+              Página {currentPage} de {meta.totalPages} ({meta.totalItems} productos)
+            </Text>
+            <IconButton
+              aria-label="Página siguiente"
+              icon={<ChevronRightIcon />}
+              isDisabled={currentPage >= meta.totalPages}
+              onClick={() => setCurrentPage(currentPage + 1)}
+              size="sm"
+            />
+          </HStack>
+        </Flex>
+      )}
+
       {deleteState.selected && (
         <ConfirmDeleteModal
           description={deleteState.selected?.description}
